@@ -1,5 +1,4 @@
-﻿using BookStore.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -18,7 +17,7 @@ namespace BookStore.Models.Db
         public int BookInStoreId { get; set; }
         [Required]
         public int CustomerId { get; set; }
-        [Required, DataType(DataType.Date), Column(TypeName = "date"), SqlDefaultValue(DefaultValue = "GetDate()")]
+        [Required, Column(TypeName = "date")]
         public DateTime DateReserve { get; set; }
         [ForeignKey("BookInStoreId")]
         public virtual BookInStore BookInStore { get; set; }

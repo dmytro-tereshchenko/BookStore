@@ -16,9 +16,9 @@ namespace BookStore.Models.Db
         public int BookId { get; set; }
         [Required, Column(TypeName = "decimal(2,2)")]
         public decimal Discount { get; set; }
-        [Required, DataType(DataType.Date), Column(TypeName = "date")]
+        [Required, Column(TypeName = "date")]
         public DateTime DateStart { get; set; }
-        [Required, DataType(DataType.Date), Column(TypeName = "date")]
+        [Required, Column(TypeName = "date")]
         public DateTime DateEnd { get; set; }
         [ForeignKey("BookId")]
         public virtual Book Book { get; set; }

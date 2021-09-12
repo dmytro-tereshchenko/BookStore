@@ -22,7 +22,7 @@ namespace BookStore.Models.Db
         public decimal Price { get; set; }
         [Required]
         public int Amount { get; set; }
-        [Required, DataType(DataType.Date), Column(TypeName ="date")]
+        [Required, Column(TypeName ="date")]
         public DateTime DateAdded { get; set; }
         public virtual List<BookReserve> BookReserves { get; set; } = new List<BookReserve>();
         public virtual List<BookSold> BookSolds { get; set; } = new List<BookSold>();

@@ -45,6 +45,8 @@ namespace BookStore.Models.Db
             modelBuilder.Entity<Stock>(entity => entity
                         .HasCheckConstraint("CK_Stock_Discount", "[Discount] > 0 AND [Discount] <= 100.0"));
             modelBuilder.Entity<BookReserve>().Property(u => u.DateReserve).HasDefaultValueSql<DateTime>("getdate()");
+            modelBuilder.Entity<BookSold>().Property(u => u.DateSold).HasDefaultValueSql<DateTime>("getdate()");
+            modelBuilder.Entity<BookInStore>().Property(u => u.DateAdded).HasDefaultValueSql<DateTime>("getdate()");
             
         }
     }

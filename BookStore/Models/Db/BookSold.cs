@@ -16,8 +16,8 @@ namespace BookStore.Models.Db
         public int BookInStoreId { get; set; }
         [Required]
         public int CustomerId { get; set; }
-        [Required, DataType(DataType.Date), Column(TypeName = "date")]
-        public DateTime DateReserve { get; set; }
+        [Required, Column(TypeName = "date")]
+        public DateTime DateSold { get; set; }
         [Required, Column(TypeName = "decimal(5,2)")]
         public decimal SoldPrice { get; set; }
         [ForeignKey("BookInStoreId")]
