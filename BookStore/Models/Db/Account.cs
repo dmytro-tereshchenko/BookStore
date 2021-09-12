@@ -13,7 +13,7 @@ namespace BookStore.Models.Db
         public int Id { get; set; }
         [MaxLength(20), Required]
         public string Login { get; set; }
-        [MaxLength(40), Required]
+        [MaxLength(40), DataType(DataType.Password), Required]
         public string Password { get; set; }
         [Required]
         public bool Admin { get; set; }

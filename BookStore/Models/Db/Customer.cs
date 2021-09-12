@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BookStore.Models.Db
 {
-    public class Author
+    public class Customer
     {
         [Key, Required]
         public int Id { get; set; }
@@ -20,7 +20,8 @@ namespace BookStore.Models.Db
 #nullable disable
         [MaxLength(30), Required]
         public string LastName { get; set; }
-        public virtual List<BookAuthor> BookAuthors { get; set; } = new List<BookAuthor>();
+        public virtual List<BookReserve> BookReserves { get; set; } = new List<BookReserve>();
+        public virtual List<BookSold> BookSolds { get; set; } = new List<BookSold>();
         [NotMapped]
         public string FullName { get => $"{FirstName} {(MiddleName is null ? "" : MiddleName + " ")}{LastName}"; }
     }
