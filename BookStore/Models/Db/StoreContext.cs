@@ -142,7 +142,11 @@ namespace BookStore.Models.Db
                 new BookAuthor(){ AuthorId=1, BookId=1},
                 new BookAuthor(){ AuthorId=2, BookId=2},
                 new BookAuthor(){ AuthorId=3, BookId=3},
-                new BookAuthor(){ AuthorId=4, BookId=4}
+                new BookAuthor(){ AuthorId=4, BookId=4},
+                new BookAuthor(){ AuthorId=5, BookId=5},
+                new BookAuthor(){ AuthorId=6, BookId=6},
+                new BookAuthor(){ AuthorId=6, BookId=7},
+                new BookAuthor(){ AuthorId=6, BookId=8}
             };
             BookInStore[] bookInStores = new BookInStore[]
             {
