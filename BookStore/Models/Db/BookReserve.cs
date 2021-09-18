@@ -15,13 +15,12 @@ namespace BookStore.Models.Db
         public int Id { get; set; }
         [Required]
         public int BookInStoreId { get; set; }
-        [Required]
-        public int CustomerId { get; set; }
+        public int? AccountId { get; set; }
         [Required, Column(TypeName = "date")]
         public DateTime DateReserve { get; set; }
         [ForeignKey("BookInStoreId")]
         public virtual BookInStore BookInStore { get; set; }
-        [ForeignKey("CustomerId")]
-        public virtual Customer Customer { get; set; }
+        [ForeignKey("AccountId")]
+        public virtual Account Account { get; set; }
     }
 }

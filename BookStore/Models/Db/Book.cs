@@ -29,6 +29,5 @@ namespace BookStore.Models.Db
         public virtual List<BookAuthor> BookAuthors { get; set; } = new List<BookAuthor>();
         public virtual List<BookSeriesBook> BookSeriesBooks { get; set; } = new List<BookSeriesBook>();
         public virtual List<BookInStore> BookInStores { get; set; } = new List<BookInStore>();
-        public virtual List<Stock> Stocks { get; set; } = new List<Stock>();
     }
 }

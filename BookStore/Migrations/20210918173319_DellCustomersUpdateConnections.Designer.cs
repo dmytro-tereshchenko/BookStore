@@ -4,14 +4,16 @@ using BookStore.Models.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookStore.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20210918173319_DellCustomersUpdateConnections")]
+    partial class DellCustomersUpdateConnections
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,22 +46,6 @@ namespace BookStore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Accounts");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Admin = true,
-                            Login = "admin",
-                            Password = "admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Admin = false,
-                            Login = "seller1",
-                            Password = "seller1"
-                        });
                 });
 
             modelBuilder.Entity("BookStore.Models.Db.Author", b =>
@@ -86,47 +72,6 @@ namespace BookStore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Authors");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            FirstName = "Marcel",
-                            LastName = "Proust"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            FirstName = "James",
-                            LastName = "Joyce"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            FirstName = "Miguel",
-                            LastName = "de Cervantes"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            FirstName = "Gabriel",
-                            LastName = "Márquez",
-                            MiddleName = "García"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            FirstName = "Francis",
-                            LastName = "Fitzgerald",
-                            MiddleName = "Scott"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            FirstName = "John",
-                            LastName = "Tolkien",
-                            MiddleName = "Ronald Reuel"
-                        });
                 });
 
             modelBuilder.Entity("BookStore.Models.Db.Book", b =>
@@ -164,80 +109,6 @@ namespace BookStore.Migrations
                     b.HasCheckConstraint("CK_Book_Pages", "[Pages] >=0");
 
                     b.HasCheckConstraint("CK_Book_YearOfPublished", "[YearOfPublished] >= 0 AND [YearOfPublished] <= YEAR(GETDATE())");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            GenreId = 1,
-                            Name = "In Search of Lost Time",
-                            Pages = 4215,
-                            PublisherId = 1,
-                            YearOfPublished = 1922
-                        },
-                        new
-                        {
-                            Id = 2,
-                            GenreId = 1,
-                            Name = "Ulysses",
-                            Pages = 730,
-                            PublisherId = 2,
-                            YearOfPublished = 1922
-                        },
-                        new
-                        {
-                            Id = 3,
-                            GenreId = 2,
-                            Name = "Don Quixote",
-                            Pages = 845,
-                            PublisherId = 3,
-                            YearOfPublished = 1620
-                        },
-                        new
-                        {
-                            Id = 4,
-                            GenreId = 3,
-                            Name = "One Hundred Years of Solitude",
-                            Pages = 624,
-                            PublisherId = 4,
-                            YearOfPublished = 1970
-                        },
-                        new
-                        {
-                            Id = 5,
-                            GenreId = 4,
-                            Name = "The Great Gatsby",
-                            Pages = 749,
-                            PublisherId = 5,
-                            YearOfPublished = 1925
-                        },
-                        new
-                        {
-                            Id = 6,
-                            GenreId = 5,
-                            Name = "The Fellowship of the Ring",
-                            Pages = 423,
-                            PublisherId = 6,
-                            YearOfPublished = 1954
-                        },
-                        new
-                        {
-                            Id = 7,
-                            GenreId = 5,
-                            Name = "The Two Towers",
-                            Pages = 352,
-                            PublisherId = 6,
-                            YearOfPublished = 1954
-                        },
-                        new
-                        {
-                            Id = 8,
-                            GenreId = 5,
-                            Name = "The Return of the King",
-                            Pages = 416,
-                            PublisherId = 6,
-                            YearOfPublished = 1955
-                        });
                 });
 
             modelBuilder.Entity("BookStore.Models.Db.BookAuthor", b =>
@@ -253,28 +124,6 @@ namespace BookStore.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("BookAuthors");
-
-                    b.HasData(
-                        new
-                        {
-                            BookId = 1,
-                            AuthorId = 1
-                        },
-                        new
-                        {
-                            BookId = 2,
-                            AuthorId = 2
-                        },
-                        new
-                        {
-                            BookId = 3,
-                            AuthorId = 3
-                        },
-                        new
-                        {
-                            BookId = 4,
-                            AuthorId = 4
-                        });
                 });
 
             modelBuilder.Entity("BookStore.Models.Db.BookInStore", b =>
@@ -312,80 +161,6 @@ namespace BookStore.Migrations
                     b.HasCheckConstraint("CK_BookInStore_Price", "[Price] >= 0");
 
                     b.HasCheckConstraint("CK_BookInStore_Amount", "[Amount] >= 0");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Amount = 5,
-                            BookId = 1,
-                            CostPrice = 254.2m,
-                            DateAdded = new DateTime(2018, 9, 18, 20, 34, 28, 990, DateTimeKind.Local).AddTicks(5813),
-                            Price = 350m
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Amount = 12,
-                            BookId = 2,
-                            CostPrice = 324.7m,
-                            DateAdded = new DateTime(2020, 12, 18, 20, 34, 28, 993, DateTimeKind.Local).AddTicks(4883),
-                            Price = 400m
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Amount = 24,
-                            BookId = 3,
-                            CostPrice = 128.6m,
-                            DateAdded = new DateTime(2021, 8, 29, 20, 34, 28, 993, DateTimeKind.Local).AddTicks(4912),
-                            Price = 200m
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Amount = 7,
-                            BookId = 4,
-                            CostPrice = 742.5m,
-                            DateAdded = new DateTime(2021, 9, 14, 20, 34, 28, 993, DateTimeKind.Local).AddTicks(5003),
-                            Price = 1000m
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Amount = 11,
-                            BookId = 5,
-                            CostPrice = 418.1m,
-                            DateAdded = new DateTime(2021, 9, 18, 20, 34, 28, 993, DateTimeKind.Local).AddTicks(5008),
-                            Price = 600m
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Amount = 14,
-                            BookId = 6,
-                            CostPrice = 251m,
-                            DateAdded = new DateTime(2021, 9, 18, 20, 34, 28, 993, DateTimeKind.Local).AddTicks(5012),
-                            Price = 325m
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Amount = 10,
-                            BookId = 7,
-                            CostPrice = 284m,
-                            DateAdded = new DateTime(2021, 9, 10, 20, 34, 28, 993, DateTimeKind.Local).AddTicks(5016),
-                            Price = 392m
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Amount = 15,
-                            BookId = 8,
-                            CostPrice = 327.6m,
-                            DateAdded = new DateTime(2021, 9, 10, 20, 34, 28, 993, DateTimeKind.Local).AddTicks(5020),
-                            Price = 450m
-                        });
                 });
 
             modelBuilder.Entity("BookStore.Models.Db.BookReserve", b =>
@@ -413,22 +188,6 @@ namespace BookStore.Migrations
                     b.HasIndex("BookInStoreId");
 
                     b.ToTable("BookReserves");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AccountId = 2,
-                            BookInStoreId = 1,
-                            DateReserve = new DateTime(2021, 9, 16, 20, 34, 28, 993, DateTimeKind.Local).AddTicks(6217)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AccountId = 2,
-                            BookInStoreId = 3,
-                            DateReserve = new DateTime(2021, 9, 17, 20, 34, 28, 993, DateTimeKind.Local).AddTicks(6529)
-                        });
                 });
 
             modelBuilder.Entity("BookStore.Models.Db.BookSeries", b =>
@@ -445,13 +204,6 @@ namespace BookStore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BookSerieses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "The Lord of the Rings"
-                        });
                 });
 
             modelBuilder.Entity("BookStore.Models.Db.BookSeriesBook", b =>
@@ -470,26 +222,6 @@ namespace BookStore.Migrations
                     b.HasIndex("BookSeriesId");
 
                     b.ToTable("BookSeriesBooks");
-
-                    b.HasData(
-                        new
-                        {
-                            BookId = 6,
-                            BookSeriesId = 1,
-                            Position = 1
-                        },
-                        new
-                        {
-                            BookId = 7,
-                            BookSeriesId = 1,
-                            Position = 2
-                        },
-                        new
-                        {
-                            BookId = 8,
-                            BookSeriesId = 1,
-                            Position = 3
-                        });
                 });
 
             modelBuilder.Entity("BookStore.Models.Db.BookSold", b =>
@@ -520,32 +252,6 @@ namespace BookStore.Migrations
                     b.HasIndex("BookInStoreId");
 
                     b.ToTable("BookSolds");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AccountId = 2,
-                            BookInStoreId = 2,
-                            DateSold = new DateTime(2021, 6, 18, 20, 34, 28, 993, DateTimeKind.Local).AddTicks(7925),
-                            SoldPrice = 400m
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AccountId = 2,
-                            BookInStoreId = 4,
-                            DateSold = new DateTime(2021, 9, 6, 20, 34, 28, 993, DateTimeKind.Local).AddTicks(8239),
-                            SoldPrice = 1000m
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AccountId = 2,
-                            BookInStoreId = 5,
-                            DateSold = new DateTime(2021, 9, 13, 20, 34, 28, 993, DateTimeKind.Local).AddTicks(8250),
-                            SoldPrice = 600m
-                        });
                 });
 
             modelBuilder.Entity("BookStore.Models.Db.Genre", b =>
@@ -563,33 +269,6 @@ namespace BookStore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Genres");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Modernist"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Novel"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Magic realism"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Tragedy"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Fantasy"
-                        });
                 });
 
             modelBuilder.Entity("BookStore.Models.Db.Publisher", b =>
@@ -607,38 +286,6 @@ namespace BookStore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Publishers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Grasset and Gallimard"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Shakespeare and Company"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Francisco de Robles"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Editorial"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Charles Scribner's Sons"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "George Allen & Unwin"
-                        });
                 });
 
             modelBuilder.Entity("BookStore.Models.Db.Stock", b =>
@@ -667,16 +314,6 @@ namespace BookStore.Migrations
                     b.ToTable("Stocks");
 
                     b.HasCheckConstraint("CK_Stock_Discount", "[Discount] > 0 AND [Discount] <= 100.0");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BookInStoreId = 3,
-                            DateEnd = new DateTime(2021, 10, 8, 20, 34, 28, 993, DateTimeKind.Local).AddTicks(9731),
-                            DateStart = new DateTime(2021, 9, 13, 20, 34, 28, 993, DateTimeKind.Local).AddTicks(9422),
-                            Discount = 15m
-                        });
                 });
 
             modelBuilder.Entity("BookStore.Models.Db.Book", b =>

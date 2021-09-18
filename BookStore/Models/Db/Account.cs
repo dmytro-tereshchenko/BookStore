@@ -17,5 +17,7 @@ namespace BookStore.Models.Db
         public string Password { get; set; }
         [Required]
         public bool Admin { get; set; }
+        public virtual List<BookReserve> BookReserves { get; set; } = new List<BookReserve>();
+        public virtual List<BookSold> BookSolds { get; set; } = new List<BookSold>();
     }
 }
