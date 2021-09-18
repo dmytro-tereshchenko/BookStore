@@ -5,8 +5,83 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStore"
         mc:Ignorable="d"
-        Title="Book store" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+        Title="Book store" Height="450" Width="850" MinHeight="250" MinWidth="800">
+    <Window.Resources>
+    </Window.Resources>
+    <DockPanel LastChildFill="True">
+        <DockPanel DockPanel.Dock="Top" LastChildFill="False">
+            <Button Content="{StaticResource iconLogout}"/>
+            <TextBlock>Name user</TextBlock>
+            <Label Target="{Binding ElementName=loginUser}">Login</Label>
+            <TextBox x:Name="loginUser" Style="{StaticResource userTextBox}"></TextBox>
+            <Label Target="{Binding ElementName=passwordUser}">Password</Label>
+            <PasswordBox x:Name="passwordUser"></PasswordBox>
+            <Button>Login</Button>
+            <Button DockPanel.Dock="Right">Search</Button>
+            <TextBox DockPanel.Dock="Right" x:Name="genreSearch" Style="{StaticResource searchTextBox}"/>
+            <Label DockPanel.Dock="Right" Target="{Binding ElementName=genreSearch}">Genre</Label>
+            <TextBox DockPanel.Dock="Right" x:Name="authorSearch" Style="{StaticResource searchTextBox}"/>
+            <Label DockPanel.Dock="Right" Target="{Binding ElementName=authorSearch}">Author</Label>
+            <TextBox DockPanel.Dock="Right" x:Name="bookSearch" Style="{StaticResource searchTextBox}"/>
+            <Label DockPanel.Dock="Right" Target="{Binding ElementName=bookSearch}">Name of Book</Label>
+            <!--<Image Source="../Images/logout_1.png" Width="20" Height="20"></Image>-->
+        </DockPanel>
+        <Grid DockPanel.Dock="Left">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Button>All books</Button>
+            <Button Grid.Row="1">New books</Button>
+            <Button Grid.Row="2">Best selling books</Button>
+            <Button Grid.Row="3">Most popular authors</Button>
+            <Button Grid.Row="4">Most popular genres</Button>
+            <Button Grid.Row="5">Reserved books</Button>
+            <Button Grid.Row="6">Sold books</Button>
+        </Grid>
+        <Grid DockPanel.Dock="Right">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button>Manage accounts</Button>
+            <Button Grid.Row="1">Manage authors</Button>
+            <Button Grid.Row="2">Manage genres</Button>
+            <Button Grid.Row="3">Manage publishers</Button>
+            <Button Grid.Row="4">Manage books</Button>
+            <Button Grid.Row="5">Manage books is store</Button>
+            <Button Grid.Row="6">Manage stocks</Button>
+            <Button Grid.Row="7">Manage series</Button>
+        </Grid>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="Period">
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton>Day</RadioButton>
+                    <RadioButton>Week</RadioButton>
+                    <RadioButton>Month</RadioButton>
+                    <RadioButton>Year</RadioButton>
+                </StackPanel>
+            </GroupBox>
+        </Grid>
+        <UniformGrid DockPanel.Dock="Bottom" Columns="2">
+            <Button>Reserve</Button>
+            <Button>Buy</Button>
+        </UniformGrid>
+        <ListBox></ListBox>
+    </DockPanel>
 </Window>
