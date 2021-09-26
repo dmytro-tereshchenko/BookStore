@@ -5,7 +5,7 @@
         <Setter Property="Width" Value="20" />
         <Setter Property="Height" Value="20" />
     </Style>
-    
+
     <Style x:Key="userTextBox" TargetType="TextBox">
         <Setter Property="Width" Value="100"/>
         <Setter Property="Height" Value="20"/>
@@ -18,4 +18,182 @@
         <Setter Property="Width" Value="70"/>
         <Setter Property="Height" Value="20"/>
     </Style>
+    <!--<ControlTemplate x:Key="leftButtonTemplate" TargetType="{x:Type Button}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="5"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5"/>
+                <RowDefinition/>
+                <RowDefinition Height="5"/>
+            </Grid.RowDefinitions>
+            <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="1,1,1,0"
+                    Grid.Column="1"
+                    Grid.Row="0"/>
+            <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="1,1,0,1"
+                    Grid.Column="0"
+                    Grid.Row="1"/>
+            <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    Grid.Column="1"
+                    Grid.Row="1">
+                <Grid>
+                    <Border Background="{TemplateBinding BorderBrush}"
+                            Height="1"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Width="1"/>
+                    <Border Background="{TemplateBinding BorderBrush}"
+                            Height="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Width="1"/>
+                    <Border Background="{TemplateBinding BorderBrush}"
+                            Height="1"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Bottom"
+                            Width="1"/>
+                    <Border Background="{TemplateBinding BorderBrush}"
+                            Height="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Width="1"/>
+                </Grid>
+            </Border>
+            <Border Background= "{TemplateBinding Background}"
+                    BorderBrush= "{TemplateBinding BorderBrush}"
+                    BorderThickness= "0,1,1,1"
+                    Grid.Column="2"
+                    Grid.Row="1"/>
+            <Border Background= "{TemplateBinding Background}"
+                    BorderBrush= "{TemplateBinding BorderBrush}"
+                    BorderThickness="1,0,1,1"
+                    Grid.Column="1"
+                    Grid.Row="2"/>
+            <ContentPresenter Content="{TemplateBinding Content}"
+                              Grid.Column="1"
+                              Grid.Row="1"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              Margin= "{TemplateBinding Padding}"
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+            
+        </Grid>
+    </ControlTemplate>-->
+
+
+
+    <StreamGeometry x:Key="LeftButtonGeometry">M0,0 L150,0 L170,15 L150,30 L0,30 L20,15 Z</StreamGeometry>
+    <StreamGeometry x:Key="RightButtonGeometry">M170,0 L20,0 L0,15 L20,30 L170,30 L150,15 Z</StreamGeometry>
+    <Style x:Key="LeftFocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Path Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2" Data="{StaticResource LeftButtonGeometry}" Width="170" Height="30"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="RightFocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Path Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2" Data="{StaticResource RightButtonGeometry}" Width="170" Height="30"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+    <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+    <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+    <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+    <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+    <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+    <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+    <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+
+    <ControlTemplate x:Key="LeftButtonTemplate"  TargetType="{x:Type Button}">
+        <Grid>
+            <Path Name="border" Stroke="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Background}" Data="{StaticResource LeftButtonGeometry}" Width="170" Height="30"/>
+            <ContentPresenter Content="{TemplateBinding Content}"
+                              Grid.Column="0"
+                              Grid.Row="0"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsDefaulted" Value="true">
+                <Setter Property="Stroke" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Fill" TargetName="border" Value="{StaticResource Button.MouseOver.Background}"/>
+                <Setter Property="Stroke" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter Property="Fill" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
+                <Setter Property="Stroke" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Fill" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                <Setter Property="Stroke" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="RightButtonTemplate"  TargetType="{x:Type Button}">
+        <Grid>
+            <Path Name="border" Stroke="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Background}" Data="{StaticResource RightButtonGeometry}" Width="170" Height="30"/>
+            <ContentPresenter Content="{TemplateBinding Content}"
+                              Grid.Column="0"
+                              Grid.Row="0"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsDefaulted" Value="true">
+                <Setter Property="Stroke" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Fill" TargetName="border" Value="{StaticResource Button.MouseOver.Background}"/>
+                <Setter Property="Stroke" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter Property="Fill" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
+                <Setter Property="Stroke" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Fill" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                <Setter Property="Stroke" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="LeftTriangleButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource LeftFocusVisual}"/>
+        <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+        <Setter Property="Template" Value="{StaticResource LeftButtonTemplate}"/>
+        </Style>
+
+    <Style x:Key="RightTriangleButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource RightFocusVisual}"/>
+        <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+        <Setter Property="Template" Value="{StaticResource RightButtonTemplate}"/>
+    </Style>
+
+    <TranslateTransform x:Key="TranslateRight" X="35" Y="0" />
+    <RotateTransform x:Key="Rotate090" CenterX="24" CenterY="24" Angle="090"/>
+    <RotateTransform x:Key="Rotate180" CenterX="24" CenterY="24" Angle="180"/>
+    <RotateTransform x:Key="Rotate270" CenterX="24" CenterY="24" Angle="270"/>
+    
+    
 </ResourceDictionary>

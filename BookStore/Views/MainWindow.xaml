@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookStore"
         mc:Ignorable="d"
-        Title="Book store" Height="450" Width="850" MinHeight="250" MinWidth="800">
+        Title="Book store" Height="450" Width="850" MinHeight="320" MinWidth="800">
     <Window.Resources>
     </Window.Resources>
     <DockPanel LastChildFill="True">
@@ -24,7 +24,6 @@
             <Label DockPanel.Dock="Right" Target="{Binding ElementName=authorSearch}">Author</Label>
             <TextBox DockPanel.Dock="Right" x:Name="bookSearch" Style="{StaticResource searchTextBox}"/>
             <Label DockPanel.Dock="Right" Target="{Binding ElementName=bookSearch}">Name of Book</Label>
-            <!--<Image Source="../Images/logout_1.png" Width="20" Height="20"></Image>-->
         </DockPanel>
         <Grid DockPanel.Dock="Left">
             <Grid.RowDefinitions>
@@ -36,13 +35,13 @@
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Button>All books</Button>
-            <Button Grid.Row="1">New books</Button>
-            <Button Grid.Row="2">Best selling books</Button>
-            <Button Grid.Row="3">Most popular authors</Button>
-            <Button Grid.Row="4">Most popular genres</Button>
-            <Button Grid.Row="5">Reserved books</Button>
-            <Button Grid.Row="6">Sold books</Button>
+            <Button Style="{DynamicResource LeftTriangleButtonStyle}">All books</Button>
+            <Button Grid.Row="1" Style="{DynamicResource LeftTriangleButtonStyle}">New books</Button>
+            <Button Grid.Row="2" Style="{DynamicResource LeftTriangleButtonStyle}">Best selling books</Button>
+            <Button Grid.Row="3" Style="{DynamicResource LeftTriangleButtonStyle}">Most popular authors</Button>
+            <Button Grid.Row="4" Style="{DynamicResource LeftTriangleButtonStyle}">Most popular genres</Button>
+            <Button Grid.Row="5" Style="{DynamicResource LeftTriangleButtonStyle}">Reserved books</Button>
+            <Button Grid.Row="6" Style="{DynamicResource LeftTriangleButtonStyle}">Sold books</Button>
         </Grid>
         <Grid DockPanel.Dock="Right">
             <Grid.RowDefinitions>
@@ -55,14 +54,14 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button>Manage accounts</Button>
-            <Button Grid.Row="1">Manage authors</Button>
-            <Button Grid.Row="2">Manage genres</Button>
-            <Button Grid.Row="3">Manage publishers</Button>
-            <Button Grid.Row="4">Manage books</Button>
-            <Button Grid.Row="5">Manage books is store</Button>
-            <Button Grid.Row="6">Manage stocks</Button>
-            <Button Grid.Row="7">Manage series</Button>
+            <Button Style="{DynamicResource RightTriangleButtonStyle}">Manage accounts</Button>
+            <Button Grid.Row="1" Style="{DynamicResource RightTriangleButtonStyle}">Manage authors</Button>
+            <Button Grid.Row="2" Style="{DynamicResource RightTriangleButtonStyle}">Manage genres</Button>
+            <Button Grid.Row="3" Style="{DynamicResource RightTriangleButtonStyle}">Manage publishers</Button>
+            <Button Grid.Row="4" Style="{DynamicResource RightTriangleButtonStyle}">Manage books</Button>
+            <Button Grid.Row="5" Style="{DynamicResource RightTriangleButtonStyle}">Manage books is store</Button>
+            <Button Grid.Row="6" Style="{DynamicResource RightTriangleButtonStyle}">Manage stocks</Button>
+            <Button Grid.Row="7" Style="{DynamicResource RightTriangleButtonStyle}">Manage series</Button>
         </Grid>
         <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
