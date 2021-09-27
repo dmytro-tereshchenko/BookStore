@@ -81,6 +81,6 @@
             <Button>Reserve</Button>
             <Button>Buy</Button>
         </UniformGrid>
-        <ListBox></ListBox>
+        <DataGrid></DataGrid>
     </DockPanel>
 </Window>
