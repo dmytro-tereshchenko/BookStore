@@ -1,4 +1,5 @@
-﻿using BookStore.Models;
+﻿using BookStore.Interfaces;
+using BookStore.Models;
 using BookStore.Models.Db;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,22 +17,23 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BookStore
+namespace BookStore.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    internal partial class MainView : Window
     {
-        public MainWindow()
+        public MainView(IViewModel viewModel)
         {
             InitializeComponent();
-            Configures config = new Configures("appsettings.json");
+            this.DataContext = viewModel;
+            /*Configures config = new Configures("appsettings.json");
             DbContextOptions<StoreContext> options = config.GetOptions("DefaultConnection");
             using (StoreContext db = new StoreContext(options))
             {
 
-            }
+            }*/
 
         }
     }

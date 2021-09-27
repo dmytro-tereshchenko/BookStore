@@ -1,4 +1,10 @@
-﻿using System;
+﻿using BookStore.Interfaces;
+using BookStore.Models;
+using BookStore.Models.Db;
+using BookStore.ViewModels;
+using BookStore.Views;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +19,16 @@ namespace BookStore
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            Configures config = new Configures("appsettings.json");
+            DbContextOptions<StoreContext> options = config.GetOptions("DefaultConnection");
+            DbSqlRepository repository = new DbSqlRepository(options);
+            IViewModel viewModel = new MainViewModel(repository);
+            var view = new MainView(viewModel);
+            view.Show();
+        }
     }
 }
