@@ -37,7 +37,7 @@
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Button Style="{DynamicResource LeftTriangleButtonStyle}">All books</Button>
+            <Button Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding AllBooksView}">All books</Button>
             <Button Grid.Row="1" Style="{DynamicResource LeftTriangleButtonStyle}">New books</Button>
             <Button Grid.Row="2" Style="{DynamicResource LeftTriangleButtonStyle}">Best selling books</Button>
             <Button Grid.Row="3" Style="{DynamicResource LeftTriangleButtonStyle}">Most popular authors</Button>
@@ -84,6 +84,20 @@
             <Button>Reserve</Button>
             <Button>Buy</Button>
         </UniformGrid>
-        <DataGrid></DataGrid>
+        <DataGrid AutoGenerateColumns="True"
+                  AutoGeneratingColumn="dg_AutoGeneratingColumn" 
+                  ItemsSource="{Binding ResultView}">
+            <!--<DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Authors" Binding="{Binding Authors}"/>
+                <DataGridTextColumn Header="Pages" Binding="{Binding Pages}"/>
+                <DataGridTextColumn Header="Year of published" Binding="{Binding YearOfPublished}"/>
+                <DataGridTextColumn Header="Publisher" Binding="{Binding Publisher}"/>
+                <DataGridTextColumn Header="Genre" Binding="{Binding Genre}"/>
+                <DataGridTextColumn Header="Series" Binding="{Binding Series}"/>
+                <DataGridTextColumn Header="Price" Binding="{Binding Price}"/>
+            </DataGrid.Columns>-->
+        </DataGrid>
     </DockPanel>
 </Window>

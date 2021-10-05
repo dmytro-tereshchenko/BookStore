@@ -1,4 +1,5 @@
 ﻿using BookStore.Infrastructure;
+using BookStore.Interfaces;
 using BookStore.Models;
 using System;
 using System.Collections.Generic;
@@ -17,32 +18,30 @@ namespace BookStore.ViewModels
         private DbSqlRepository storeRepository;
         private ICommand login;
         private ICommand logout;
+        private ICommand allBooksView;
         public MainViewModel(DbSqlRepository storeRepository)
         {
             this.storeRepository = storeRepository;
             storeRepository.CurrentUserChanged += OnCurrentUserChanged;
-            /*IsAdmin = Visibility.Collapsed;
-            IsLogIn = Visibility.Collapsed;*/
+            storeRepository.ResultViewChanged += OnResultViewChanged;
             IsPeriodBarUsed = Visibility.Collapsed;
-            login = new DialogCommand(LoginUser /*() => !String.IsNullOrEmpty(LoginField)*/);
+            login = new DialogCommand(LoginUser); ;
             logout = new DelegateCommand(LogoutUser);
+            allBooksView = new DelegateCommand(ShowAllBooks);
         }
         public Visibility IsAdmin { get => (storeRepository?.CurrentUser?.Admin ?? false) == true ? Visibility.Visible : Visibility.Collapsed; }
         public Visibility IsLogIn { get => storeRepository?.CurrentUser != null ? Visibility.Visible : Visibility.Collapsed; }
         public Visibility IsLogOut { get => IsLogIn == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed; }
         public Visibility IsPeriodBarUsed { get; set; }
+        public List<BookView> ResultView { get => storeRepository.ResultBooks; set => storeRepository.ResultBooks = value; }
         public ICommand Login => login;
         public ICommand Logout => logout;
+        public ICommand AllBooksView => allBooksView;
         public string LoginField 
         { 
-            get => storeRepository.LoginField; 
-            set => storeRepository.LoginField = value; 
+            get => storeRepository.LoginField;
+            set => storeRepository.LoginField = value;
         }
-        /*public string PasswordField 
-        { 
-            get => storeRepository.PasswordField; 
-            set => storeRepository.PasswordField = value; 
-        }*/
         public string LoginText { get => storeRepository?.CurrentUser?.Login ?? ""; }
         private void OnCurrentUserChanged(object sender, EventArgs e)
         {
@@ -51,6 +50,10 @@ namespace BookStore.ViewModels
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsLogOut)));
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(LoginText)));
         }
+        private void OnResultViewChanged(object sender, EventArgs e)
+        {
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(ResultView)));
+        }
         private void LoginUser(object password)
         {
             storeRepository.UserLogIn((password as PasswordBox).Password);
@@ -58,5 +61,6 @@ namespace BookStore.ViewModels
         }
         
         private void LogoutUser() => storeRepository.UserLogout();
+        private void ShowAllBooks() => storeRepository.AllBooksView();
     }
 }
