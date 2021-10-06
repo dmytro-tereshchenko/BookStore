@@ -222,6 +222,7 @@ namespace BookStore.Models.Db
                     Id=1,
                     AccountId=2,
                     BookInStoreId=1,
+                    Description ="Book for client with telephone 0984512574",
                     DateReserve=DateTime.Now.AddDays(-2)},
                 new BookReserve()
                 {

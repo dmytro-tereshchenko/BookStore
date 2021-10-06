@@ -38,8 +38,8 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Button Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding AllBooksView}">All books</Button>
-            <Button Grid.Row="1" Style="{DynamicResource LeftTriangleButtonStyle}">New books</Button>
-            <Button Grid.Row="2" Style="{DynamicResource LeftTriangleButtonStyle}">Best selling books</Button>
+            <Button Grid.Row="1" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding NewBooksView}">New books</Button>
+            <Button Grid.Row="2" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding BestSellingBooksView}">Best selling books</Button>
             <Button Grid.Row="3" Style="{DynamicResource LeftTriangleButtonStyle}">Most popular authors</Button>
             <Button Grid.Row="4" Style="{DynamicResource LeftTriangleButtonStyle}">Most popular genres</Button>
             <Button Grid.Row="5" Style="{DynamicResource LeftTriangleButtonStyle}">Reserved books</Button>
@@ -70,7 +70,7 @@
                 <ColumnDefinition />
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="TableName"></TextBlock>
+            <TextBlock x:Name="TableName" Text="{Binding TableName}"></TextBlock>
             <GroupBox Grid.Column="1" Header="Period" Visibility="{Binding IsPeriodBarUsed}">
                 <StackPanel Orientation="Horizontal">
                     <RadioButton>Day</RadioButton>
@@ -87,17 +87,6 @@
         <DataGrid AutoGenerateColumns="True"
                   AutoGeneratingColumn="dg_AutoGeneratingColumn" 
                   ItemsSource="{Binding ResultView}">
-            <!--<DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                <DataGridTextColumn Header="Authors" Binding="{Binding Authors}"/>
-                <DataGridTextColumn Header="Pages" Binding="{Binding Pages}"/>
-                <DataGridTextColumn Header="Year of published" Binding="{Binding YearOfPublished}"/>
-                <DataGridTextColumn Header="Publisher" Binding="{Binding Publisher}"/>
-                <DataGridTextColumn Header="Genre" Binding="{Binding Genre}"/>
-                <DataGridTextColumn Header="Series" Binding="{Binding Series}"/>
-                <DataGridTextColumn Header="Price" Binding="{Binding Price}"/>
-            </DataGrid.Columns>-->
         </DataGrid>
     </DockPanel>
 </Window>

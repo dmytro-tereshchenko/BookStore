@@ -15,6 +15,7 @@ namespace BookStore.Models
         private DbContextOptions<StoreContext> options;
         private Account currentUser;
         private string loginField;
+        private string tableName;
         private List<BookView> resultBooks;
         public DbSqlRepository(DbContextOptions<StoreContext> options)
         {
@@ -25,6 +26,7 @@ namespace BookStore.Models
         }
         public Account CurrentUser { get => currentUser; }
         public string LoginField { get => loginField; set => loginField = value; }
+        public string TableName { get => tableName; set => tableName = value; }
         public List<BookView> ResultBooks { get => resultBooks; set => resultBooks = value; }
 
         public event EventHandler<EventArgs> CurrentUserChanged;
@@ -83,20 +85,31 @@ namespace BookStore.Models
                                join book in db.Books on bookInStore.BookId equals book.Id
                                join genre in db.Genres on book.GenreId equals genre.Id
                                join publisher in db.Publishers on book.PublisherId equals publisher.Id
-                               join bsb in db.BookSeriesBooks on book.Id equals bsb.BookId into subBsbTable
+                               join bsb in db.BookSeriesBooks on book.Id equals bsb.BookId into subBsbTable //LEFT OUTHER JOIN BookSeries
                                from subBsb in subBsbTable.DefaultIfEmpty()
-                               join bs in db.BookSerieses on subBsb.BookSeriesId equals bs.Id into subBsTable
+                               join bs in db.BookSerieses on subBsb.BookSeriesId equals bs.Id into subBsTable //LEFT OUTHER JOIN BookSeries
                                from subBs in subBsTable.DefaultIfEmpty()
-                               join stock in (from s in db.Stocks
+                               join stock in (from s in db.Stocks //LEFT OUTHER JOIN Discounts
                                               where s.DateStart <= DateTime.Now && s.DateEnd >= DateTime.Now
                                               select s)
                                               on bookInStore.Id equals stock.BookInStoreId into subResult
                                from subStock in subResult.DefaultIfEmpty()
+                               where bookInStore.Amount - ((from reserve in db.BookReserves //Filter for free books
+                                                            where bookInStore.Id == reserve.BookInStoreId
+                                                            select reserve).Count()) > 0
                                select new BookView
                                {
                                    Id = bookInStore.Id,
                                    Name = book.Name,
-                                   Authors = DbSqlRepository.GetAuthorsByBookId(options, book.Id),
+                                   Authors = String.Join(", ", db.Authors.Join(db.BookAuthors,
+                                                a => a.Id,
+                                                ba => ba.AuthorId,
+                                                (a, ba) => new
+                                                {
+                                                    AuthorId = a.Id,
+                                                    AuthorName = a.FullName,
+                                                    BookId = ba.BookId
+                                                }).Where(c => c.BookId == book.Id).Select(d => d.AuthorName)),
                                    Pages = book.Pages,
                                    YearOfPublished = book.YearOfPublished,
                                    Publisher = publisher.Name,
@@ -105,6 +118,111 @@ namespace BookStore.Models
                                    Price = (Math.Round(bookInStore.Price * (subStock == null ? 1 : (decimal)(100 - subStock.Discount) / 100) * 100) / 100).ToString("#0.00")
                                }).ToList();
             }
+            TableName = "All books";
+            OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
+        }
+        public void NewBooksView()
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                resultBooks = (from bookInStore in db.BookInStores
+                               join book in db.Books on bookInStore.BookId equals book.Id
+                               join genre in db.Genres on book.GenreId equals genre.Id
+                               join publisher in db.Publishers on book.PublisherId equals publisher.Id
+                               join bsb in db.BookSeriesBooks on book.Id equals bsb.BookId into subBsbTable //LEFT OUTHER JOIN BookSeries
+                               from subBsb in subBsbTable.DefaultIfEmpty()
+                               join bs in db.BookSerieses on subBsb.BookSeriesId equals bs.Id into subBsTable //LEFT OUTHER JOIN BookSeries
+                               from subBs in subBsTable.DefaultIfEmpty()
+                               join stock in (from s in db.Stocks //LEFT OUTHER JOIN Discounts
+                                              where s.DateStart <= DateTime.Now && s.DateEnd >= DateTime.Now
+                                              select s)
+                                              on bookInStore.Id equals stock.BookInStoreId into subResult
+                               from subStock in subResult.DefaultIfEmpty()
+                               where bookInStore.Amount - ((from reserve in db.BookReserves //Filter for free books
+                                                            where bookInStore.Id == reserve.BookInStoreId
+                                                            select reserve).Count()) > 0
+                               where bookInStore.DateAdded > DateTime.Now.AddDays(-31)
+                               select new BookView
+                               {
+                                   Id = bookInStore.Id,
+                                   Name = book.Name,
+                                   Authors = String.Join(", ", db.Authors.Join(db.BookAuthors,
+                                                a => a.Id,
+                                                ba => ba.AuthorId,
+                                                (a, ba) => new
+                                                {
+                                                    AuthorId = a.Id,
+                                                    AuthorName = a.FullName,
+                                                    BookId = ba.BookId
+                                                }).Where(c => c.BookId == book.Id).Select(d => d.AuthorName)),
+                                   Pages = book.Pages,
+                                   YearOfPublished = book.YearOfPublished,
+                                   Publisher = publisher.Name,
+                                   Genre = genre.Name,
+                                   Series = (subBsb == null || subBs == null ? "" : $"{subBs.Name} ({subBsb.Position} book)"),
+                                   Price = (Math.Round(bookInStore.Price * (subStock == null ? 1 : (decimal)(100 - subStock.Discount) / 100) * 100) / 100).ToString("#0.00")
+                               }).ToList();
+            }
+            TableName = "New books";
+            OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
+        }
+        public void BestSellingBooksView()
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                var bookSoldQuery = db.BookSolds.GroupBy(b => b.BookInStoreId)
+                    .Select(b => new
+                    {
+                        BookInStoreId = b.Key,
+                        booksCount = b.Count()
+                    })
+                    .OrderByDescending(b => b.booksCount)
+                    .Take(5);
+
+                resultBooks = (from bookSoldTop in bookSoldQuery
+                                   /*resultBooks = (from bst in db.BookSolds
+                                                  group bst by bst.BookInStoreId into grp
+                                                  select new
+                                                  {
+                                                      BookInStoreId = grp.Key,
+                                                      booksCount = grp.Count()
+                                                  } into bookSoldQuery
+                                                  from bookSoldTop in bookSoldQuery*/
+                                   /*orderby bookSoldTop.BooksCount descending*/ /*into bookSoldQuery2*/
+                               /*from bookSoldTop in bookSoldQuery2*/
+                               join bookInStore in db.BookInStores on bookSoldTop.BookInStoreId equals bookInStore.Id
+                               join book in db.Books on bookInStore.BookId equals book.Id
+                               join genre in db.Genres on book.GenreId equals genre.Id
+                               join publisher in db.Publishers on book.PublisherId equals publisher.Id
+                               join bookSold in db.BookSolds on bookInStore.Id equals bookSold.BookInStoreId
+                               join bsb in db.BookSeriesBooks on book.Id equals bsb.BookId into subBsbTable //LEFT OUTHER JOIN BookSeries
+                               from subBsb in subBsbTable.DefaultIfEmpty()
+                               join bs in db.BookSerieses on subBsb.BookSeriesId equals bs.Id into subBsTable //LEFT OUTHER JOIN BookSeries
+                               from subBs in subBsTable.DefaultIfEmpty()
+                               select new BookView
+                               {
+                                   Id = bookSold.Id,
+                                   Name = book.Name,
+                                   Authors = String.Join(", ", db.Authors.Join(db.BookAuthors,
+                                                a => a.Id,
+                                                ba => ba.AuthorId,
+                                                (a, ba) => new
+                                                {
+                                                    AuthorId = a.Id,
+                                                    AuthorName = a.FullName,
+                                                    BookId = ba.BookId
+                                                }).Where(c => c.BookId == book.Id).Select(d => d.AuthorName)),
+                                   Pages = book.Pages,
+                                   YearOfPublished = book.YearOfPublished,
+                                   Publisher = publisher.Name,
+                                   Genre = genre.Name,
+                                   Series = (subBsb == null || subBs == null ? "" : $"{subBs.Name} ({subBsb.Position} book)"),
+                                   Price = (Math.Round((db.BookSolds.Where(b => b.BookInStoreId == bookSoldTop.BookInStoreId)
+                                                                    .Average(b => b.SoldPrice)
+                                                        ) * 100) / 100).ToString("#0.00")
+                               }).ToList();
+            }
+            TableName = "Best selling books";
             OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
         }
         public static string GetAuthorsByBookId(DbContextOptions<StoreContext> options, int bookId)

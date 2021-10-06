@@ -19,6 +19,8 @@ namespace BookStore.ViewModels
         private ICommand login;
         private ICommand logout;
         private ICommand allBooksView;
+        private ICommand newBooksView;
+        private ICommand bestSellingBooksView;
         public MainViewModel(DbSqlRepository storeRepository)
         {
             this.storeRepository = storeRepository;
@@ -28,6 +30,8 @@ namespace BookStore.ViewModels
             login = new DialogCommand(LoginUser); ;
             logout = new DelegateCommand(LogoutUser);
             allBooksView = new DelegateCommand(ShowAllBooks);
+            newBooksView = new DelegateCommand(ShowNewBooks);
+            bestSellingBooksView = new DelegateCommand(ShowBestSellingBooks);
         }
         public Visibility IsAdmin { get => (storeRepository?.CurrentUser?.Admin ?? false) == true ? Visibility.Visible : Visibility.Collapsed; }
         public Visibility IsLogIn { get => storeRepository?.CurrentUser != null ? Visibility.Visible : Visibility.Collapsed; }
@@ -37,10 +41,17 @@ namespace BookStore.ViewModels
         public ICommand Login => login;
         public ICommand Logout => logout;
         public ICommand AllBooksView => allBooksView;
+        public ICommand NewBooksView => newBooksView;
+        public ICommand BestSellingBooksView => bestSellingBooksView;
         public string LoginField 
         { 
             get => storeRepository.LoginField;
             set => storeRepository.LoginField = value;
+        }
+        public string TableName
+        {
+            get => storeRepository.TableName;
+            set => storeRepository.TableName = value;
         }
         public string LoginText { get => storeRepository?.CurrentUser?.Login ?? ""; }
         private void OnCurrentUserChanged(object sender, EventArgs e)
@@ -53,6 +64,7 @@ namespace BookStore.ViewModels
         private void OnResultViewChanged(object sender, EventArgs e)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(ResultView)));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(TableName)));
         }
         private void LoginUser(object password)
         {
@@ -62,5 +74,7 @@ namespace BookStore.ViewModels
         
         private void LogoutUser() => storeRepository.UserLogout();
         private void ShowAllBooks() => storeRepository.AllBooksView();
+        private void ShowNewBooks() => storeRepository.NewBooksView();
+        private void ShowBestSellingBooks() => storeRepository.BestSellingBooksView();
     }
 }

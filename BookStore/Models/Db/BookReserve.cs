@@ -15,6 +15,9 @@ namespace BookStore.Models.Db
         public int Id { get; set; }
         [Required]
         public int BookInStoreId { get; set; }
+#nullable enable
+        public string? Description { get; set; }
+#nullable disable
         public int? AccountId { get; set; }
         [Required, Column(TypeName = "date")]
         public DateTime DateReserve { get; set; }
