@@ -256,6 +256,14 @@ namespace BookStore.Models.Db
                     BookInStoreId=5,
                     SoldPrice=600m,
                     DateSold=DateTime.Now.AddDays(-5)
+                },
+                new BookSold()
+                {
+                    Id=4,
+                    AccountId=2,
+                    BookInStoreId=4,
+                    SoldPrice=1000m,
+                    DateSold=DateTime.Now.AddDays(-2)
                 }
             };
             Stock[] stocks = new Stock[]

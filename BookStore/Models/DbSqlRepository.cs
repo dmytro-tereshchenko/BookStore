@@ -170,7 +170,7 @@ namespace BookStore.Models
         {
             using (StoreContext db = new StoreContext(options))
             {
-                var bookSoldQuery = db.BookSolds.GroupBy(b => b.BookInStoreId)
+                /*var bookSoldQuery = db.BookSolds.GroupBy(b => b.BookInStoreId)
                     .Select(b => new
                     {
                         BookInStoreId = b.Key,
@@ -179,18 +179,18 @@ namespace BookStore.Models
                     .OrderByDescending(b => b.booksCount)
                     .Take(5);
 
-                resultBooks = (from bookSoldTop in bookSoldQuery
-                                   /*resultBooks = (from bst in db.BookSolds
-                                                  group bst by bst.BookInStoreId into grp
-                                                  select new
-                                                  {
-                                                      BookInStoreId = grp.Key,
-                                                      booksCount = grp.Count()
-                                                  } into bookSoldQuery
-                                                  from bookSoldTop in bookSoldQuery*/
+                resultBooks = (from bookSoldTop in bookSoldQuery*/
+                resultBooks = (from bst in db.BookSolds
+                                   /*group bst by bst.BookInStoreId into grp
+                                   select new
+                                   {
+                                       BookInStoreId = grp.Key,
+                                       booksCount = grp.Count()
+                                   } into bookSoldQuery
+                                   from bookSoldTop in bookSoldQuery*/
                                    /*orderby bookSoldTop.BooksCount descending*/ /*into bookSoldQuery2*/
-                               /*from bookSoldTop in bookSoldQuery2*/
-                               join bookInStore in db.BookInStores on bookSoldTop.BookInStoreId equals bookInStore.Id
+                                   /*from bookSoldTop in bookSoldQuery2*/
+                               join bookInStore in db.BookInStores on bst.BookInStoreId equals bookInStore.Id
                                join book in db.Books on bookInStore.BookId equals book.Id
                                join genre in db.Genres on book.GenreId equals genre.Id
                                join publisher in db.Publishers on book.PublisherId equals publisher.Id
@@ -201,7 +201,7 @@ namespace BookStore.Models
                                from subBs in subBsTable.DefaultIfEmpty()
                                select new BookView
                                {
-                                   Id = bookSold.Id,
+                                   Id = bookInStore.Id,
                                    Name = book.Name,
                                    Authors = String.Join(", ", db.Authors.Join(db.BookAuthors,
                                                 a => a.Id,
@@ -217,10 +217,27 @@ namespace BookStore.Models
                                    Publisher = publisher.Name,
                                    Genre = genre.Name,
                                    Series = (subBsb == null || subBs == null ? "" : $"{subBs.Name} ({subBsb.Position} book)"),
-                                   Price = (Math.Round((db.BookSolds.Where(b => b.BookInStoreId == bookSoldTop.BookInStoreId)
+                                   Price = (Math.Round((db.BookSolds.Where(b => b.BookInStoreId == bst.BookInStoreId)
                                                                     .Average(b => b.SoldPrice)
                                                         ) * 100) / 100).ToString("#0.00")
-                               }).ToList();
+                               }).ToList()
+                               .GroupBy(g => new { g.Id, g.Name, g.Authors, g.Pages, g.YearOfPublished, g.Publisher, g.Genre, g.Series, g.Price })
+                               .Select(grp => new { grp.Key.Id, grp.Key.Name, grp.Key.Authors, grp.Key.Pages, grp.Key.YearOfPublished, grp.Key.Publisher, grp.Key.Genre, grp.Key.Series, grp.Key.Price, BooksCount = grp.Count() })
+                               .OrderByDescending(b => b.BooksCount)
+                               .Take(5)
+                               .Select(r => new BookView
+                               {
+                                   Id = r.Id,
+                                   Name = r.Name,
+                                   Authors = r.Authors,
+                                   Pages = r.Pages,
+                                   YearOfPublished = r.YearOfPublished,
+                                   Publisher = r.Publisher,
+                                   Genre = r.Genre,
+                                   Series = r.Series,
+                                   Price = r.Price
+                               })
+                               .ToList();
             }
             TableName = "Best selling books";
             OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
