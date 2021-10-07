@@ -17,6 +17,7 @@ namespace BookStore.Models
         private string loginField;
         private string tableName;
         private List<BookView> resultBooks;
+        private List<SimpleEntityView> resultSimpleEntities;
         public DbSqlRepository(DbContextOptions<StoreContext> options)
         {
             this.options = options;
@@ -28,12 +29,15 @@ namespace BookStore.Models
         public string LoginField { get => loginField; set => loginField = value; }
         public string TableName { get => tableName; set => tableName = value; }
         public List<BookView> ResultBooks { get => resultBooks; set => resultBooks = value; }
+        public List<SimpleEntityView> ResultSimpleEntities { get => resultSimpleEntities; set => resultSimpleEntities = value; }
 
         public event EventHandler<EventArgs> CurrentUserChanged;
-        public event EventHandler<EventArgs> ResultViewChanged;
+        public event EventHandler<EventArgs> ResultBooksViewChanged;
+        public event EventHandler<EventArgs> ResultSimpleEntitiesViewChanged;
 
         private void OnCurrentUserChanged(EventArgs e) => CurrentUserChanged?.Invoke(this, e);
-        private void OnResultViewChanged(EventArgs e) => ResultViewChanged?.Invoke(this, e);
+        private void OnResultBooksViewChanged(EventArgs e) => ResultBooksViewChanged?.Invoke(this, e);
+        private void OnResultSimpleEntitiesViewChanged(EventArgs e) => ResultSimpleEntitiesViewChanged?.Invoke(this, e);
        /* private void OnCurrentUserChanged(EventArgs e)
         {
             var eventListeners = CurrentUserChanged.GetInvocationList();
@@ -119,7 +123,7 @@ namespace BookStore.Models
                                }).ToList();
             }
             TableName = "All books";
-            OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
+            OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
         }
         public void NewBooksView()
         {
@@ -164,32 +168,13 @@ namespace BookStore.Models
                                }).ToList();
             }
             TableName = "New books";
-            OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
+            OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
         }
         public void BestSellingBooksView()
         {
             using (StoreContext db = new StoreContext(options))
             {
-                /*var bookSoldQuery = db.BookSolds.GroupBy(b => b.BookInStoreId)
-                    .Select(b => new
-                    {
-                        BookInStoreId = b.Key,
-                        booksCount = b.Count()
-                    })
-                    .OrderByDescending(b => b.booksCount)
-                    .Take(5);
-
-                resultBooks = (from bookSoldTop in bookSoldQuery*/
                 resultBooks = (from bst in db.BookSolds
-                                   /*group bst by bst.BookInStoreId into grp
-                                   select new
-                                   {
-                                       BookInStoreId = grp.Key,
-                                       booksCount = grp.Count()
-                                   } into bookSoldQuery
-                                   from bookSoldTop in bookSoldQuery*/
-                                   /*orderby bookSoldTop.BooksCount descending*/ /*into bookSoldQuery2*/
-                                   /*from bookSoldTop in bookSoldQuery2*/
                                join bookInStore in db.BookInStores on bst.BookInStoreId equals bookInStore.Id
                                join book in db.Books on bookInStore.BookId equals book.Id
                                join genre in db.Genres on book.GenreId equals genre.Id
@@ -221,8 +206,31 @@ namespace BookStore.Models
                                                                     .Average(b => b.SoldPrice)
                                                         ) * 100) / 100).ToString("#0.00")
                                }).ToList()
-                               .GroupBy(g => new { g.Id, g.Name, g.Authors, g.Pages, g.YearOfPublished, g.Publisher, g.Genre, g.Series, g.Price })
-                               .Select(grp => new { grp.Key.Id, grp.Key.Name, grp.Key.Authors, grp.Key.Pages, grp.Key.YearOfPublished, grp.Key.Publisher, grp.Key.Genre, grp.Key.Series, grp.Key.Price, BooksCount = grp.Count() })
+                               .GroupBy(g => new
+                               {
+                                   g.Id,
+                                   g.Name,
+                                   g.Authors,
+                                   g.Pages,
+                                   g.YearOfPublished,
+                                   g.Publisher,
+                                   g.Genre,
+                                   g.Series,
+                                   g.Price
+                               })
+                               .Select(grp => new
+                               {
+                                   grp.Key.Id,
+                                   grp.Key.Name,
+                                   grp.Key.Authors,
+                                   grp.Key.Pages,
+                                   grp.Key.YearOfPublished,
+                                   grp.Key.Publisher,
+                                   grp.Key.Genre,
+                                   grp.Key.Series,
+                                   grp.Key.Price,
+                                   BooksCount = grp.Count()
+                               })
                                .OrderByDescending(b => b.BooksCount)
                                .Take(5)
                                .Select(r => new BookView
@@ -240,7 +248,37 @@ namespace BookStore.Models
                                .ToList();
             }
             TableName = "Best selling books";
-            OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
+            OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
+        }
+        public void MostPopularAuthorsView()
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                resultSimpleEntities = (from bst in db.BookSolds
+                                        join bookInStore in db.BookInStores on bst.BookInStoreId equals bookInStore.Id
+                                        join book in db.Books on bookInStore.BookId equals book.Id
+                                        join bookAuthor in db.BookAuthors on book.Id equals bookAuthor.BookId
+                                        join author in db.Authors on bookAuthor.AuthorId equals author.Id
+                                        group author by new { author.Id, author.FirstName, author.MiddleName, author.LastName } into grp
+                                        select new
+                                        {
+                                            grp.Key.Id,
+                                            grp.Key.FirstName,
+                                            grp.Key.MiddleName,
+                                            grp.Key.LastName,
+                                            CountBookSold = grp.Count()
+                                        })
+                               .OrderByDescending(g => g.CountBookSold)
+                               .Take(5)
+                               .Select(gr => new SimpleEntityView
+                               {
+                                   Id = gr.Id,
+                                   Name = $"{gr.FirstName} {(gr.MiddleName == null ? "" : gr.MiddleName + " ")}{gr.LastName}"
+                               })
+                               .ToList();
+            }
+            TableName = "Most popular authors";
+            OnResultSimpleEntitiesViewChanged(new PropertyChangedEventArgs(nameof(ResultSimpleEntities)));
         }
         public static string GetAuthorsByBookId(DbContextOptions<StoreContext> options, int bookId)
         {

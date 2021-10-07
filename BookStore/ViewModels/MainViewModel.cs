@@ -21,28 +21,37 @@ namespace BookStore.ViewModels
         private ICommand allBooksView;
         private ICommand newBooksView;
         private ICommand bestSellingBooksView;
+        private ICommand mostPopularAuthorsView;
         public MainViewModel(DbSqlRepository storeRepository)
         {
             this.storeRepository = storeRepository;
             storeRepository.CurrentUserChanged += OnCurrentUserChanged;
-            storeRepository.ResultViewChanged += OnResultViewChanged;
+            storeRepository.ResultBooksViewChanged += OnResultBooksViewChanged;
+            storeRepository.ResultSimpleEntitiesViewChanged += OnResultSimpleEnitiesChanged;
             IsPeriodBarUsed = Visibility.Collapsed;
+            IsResultBooksUsed = Visibility.Visible;
+            IsSimpleEntitiesUsed = Visibility.Collapsed;
             login = new DialogCommand(LoginUser); ;
             logout = new DelegateCommand(LogoutUser);
             allBooksView = new DelegateCommand(ShowAllBooks);
             newBooksView = new DelegateCommand(ShowNewBooks);
             bestSellingBooksView = new DelegateCommand(ShowBestSellingBooks);
+            mostPopularAuthorsView = new DelegateCommand(ShowMostPopularAuthors);
         }
         public Visibility IsAdmin { get => (storeRepository?.CurrentUser?.Admin ?? false) == true ? Visibility.Visible : Visibility.Collapsed; }
         public Visibility IsLogIn { get => storeRepository?.CurrentUser != null ? Visibility.Visible : Visibility.Collapsed; }
         public Visibility IsLogOut { get => IsLogIn == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed; }
         public Visibility IsPeriodBarUsed { get; set; }
-        public List<BookView> ResultView { get => storeRepository.ResultBooks; set => storeRepository.ResultBooks = value; }
+        public Visibility IsResultBooksUsed { get; set; }
+        public Visibility IsSimpleEntitiesUsed { get; set; }
+        public List<BookView> ResultBooksView { get => storeRepository.ResultBooks; set => storeRepository.ResultBooks = value; }
+        public List<SimpleEntityView> ResultSimpleEnitiesView { get => storeRepository.ResultSimpleEntities; set => storeRepository.ResultSimpleEntities = value; }
         public ICommand Login => login;
         public ICommand Logout => logout;
         public ICommand AllBooksView => allBooksView;
         public ICommand NewBooksView => newBooksView;
         public ICommand BestSellingBooksView => bestSellingBooksView;
+        public ICommand MostpopularAuthorsView => mostPopularAuthorsView;
         public string LoginField 
         { 
             get => storeRepository.LoginField;
@@ -61,10 +70,23 @@ namespace BookStore.ViewModels
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsLogOut)));
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(LoginText)));
         }
-        private void OnResultViewChanged(object sender, EventArgs e)
+        private void OnResultBooksViewChanged(object sender, EventArgs e)
         {
-            OnPropertyChanged(new PropertyChangedEventArgs(nameof(ResultView)));
+            IsSimpleEntitiesUsed = Visibility.Collapsed;
+            IsResultBooksUsed = Visibility.Visible;
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(ResultBooksView)));
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(TableName)));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsResultBooksUsed)));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsSimpleEntitiesUsed)));
+        }
+        private void OnResultSimpleEnitiesChanged(object sender, EventArgs e)
+        {
+            IsResultBooksUsed = Visibility.Collapsed;
+            IsSimpleEntitiesUsed = Visibility.Visible;
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(ResultSimpleEnitiesView)));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(TableName)));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsResultBooksUsed)));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsSimpleEntitiesUsed)));
         }
         private void LoginUser(object password)
         {
@@ -76,5 +98,6 @@ namespace BookStore.ViewModels
         private void ShowAllBooks() => storeRepository.AllBooksView();
         private void ShowNewBooks() => storeRepository.NewBooksView();
         private void ShowBestSellingBooks() => storeRepository.BestSellingBooksView();
+        private void ShowMostPopularAuthors() => storeRepository.MostPopularAuthorsView();
     }
 }
