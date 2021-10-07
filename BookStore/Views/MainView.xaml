@@ -40,9 +40,9 @@
             <Button Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding AllBooksView}">All books</Button>
             <Button Grid.Row="1" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding NewBooksView}">New books</Button>
             <Button Grid.Row="2" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding BestSellingBooksView}">Best selling books</Button>
-            <Button Grid.Row="3" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding MostpopularAuthorsView}">Most popular authors</Button>
-            <Button Grid.Row="4" Style="{DynamicResource LeftTriangleButtonStyle}">Most popular genres</Button>
-            <Button Grid.Row="5" Style="{DynamicResource LeftTriangleButtonStyle}">Reserved books</Button>
+            <Button Grid.Row="3" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding MostPopularAuthorsView}">Most popular authors</Button>
+            <Button Grid.Row="4" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding MostPopularGenresView}">Most popular genres</Button>
+            <Button Grid.Row="5" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding ReservedBooksView}">Reserved books</Button>
             <Button Grid.Row="6" Style="{DynamicResource LeftTriangleButtonStyle}">Sold books</Button>
         </Grid>
         <Grid DockPanel.Dock="Right" Visibility="{Binding IsAdmin}">
@@ -89,6 +89,11 @@
                   AutoGeneratingColumn="dg_AutoGeneratingColumn" 
                   ItemsSource="{Binding ResultSimpleEnitiesView}"
                   Visibility="{Binding IsSimpleEntitiesUsed}">
+            </DataGrid>
+            <DataGrid AutoGenerateColumns="True"
+                  AutoGeneratingColumn="dg_AutoGeneratingColumn" 
+                  ItemsSource="{Binding ResultReservedBooksView}"
+                  Visibility="{Binding IsReservedBookUsed}">
             </DataGrid>
             <DataGrid AutoGenerateColumns="True"
                   AutoGeneratingColumn="dg_AutoGeneratingColumn" 

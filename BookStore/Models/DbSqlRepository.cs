@@ -18,11 +18,12 @@ namespace BookStore.Models
         private string tableName;
         private List<BookView> resultBooks;
         private List<SimpleEntityView> resultSimpleEntities;
+        private List<BookReservedView> resultBooksReserved;
         public DbSqlRepository(DbContextOptions<StoreContext> options)
         {
             this.options = options;
             currentUser = null;
-            Task loadBd = new Task(() => { using (StoreContext db = new StoreContext(options)) { db.Accounts.ToList(); } });
+            Task loadBd = new Task(() => { using (StoreContext db = new StoreContext(options)) { db.Accounts.ToList(); } }); //Load accounts to cashe 
             loadBd.Start();
         }
         public Account CurrentUser { get => currentUser; }
@@ -30,14 +31,17 @@ namespace BookStore.Models
         public string TableName { get => tableName; set => tableName = value; }
         public List<BookView> ResultBooks { get => resultBooks; set => resultBooks = value; }
         public List<SimpleEntityView> ResultSimpleEntities { get => resultSimpleEntities; set => resultSimpleEntities = value; }
+        public List<BookReservedView> ResultBooksReserved { get => resultBooksReserved; set => resultBooksReserved = value; }
 
         public event EventHandler<EventArgs> CurrentUserChanged;
         public event EventHandler<EventArgs> ResultBooksViewChanged;
         public event EventHandler<EventArgs> ResultSimpleEntitiesViewChanged;
+        public event EventHandler<EventArgs> ResultBooksReservedViewChanged;
 
         private void OnCurrentUserChanged(EventArgs e) => CurrentUserChanged?.Invoke(this, e);
         private void OnResultBooksViewChanged(EventArgs e) => ResultBooksViewChanged?.Invoke(this, e);
         private void OnResultSimpleEntitiesViewChanged(EventArgs e) => ResultSimpleEntitiesViewChanged?.Invoke(this, e);
+        private void OnResultBooksReservedViewChanged(EventArgs e) => ResultBooksReservedViewChanged?.Invoke(this, e);
        /* private void OnCurrentUserChanged(EventArgs e)
         {
             var eventListeners = CurrentUserChanged.GetInvocationList();
@@ -122,6 +126,8 @@ namespace BookStore.Models
                                    Price = (Math.Round(bookInStore.Price * (subStock == null ? 1 : (decimal)(100 - subStock.Discount) / 100) * 100) / 100).ToString("#0.00")
                                }).ToList();
             }
+            resultSimpleEntities = null;
+            resultBooksReserved = null;
             TableName = "All books";
             OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
         }
@@ -167,6 +173,8 @@ namespace BookStore.Models
                                    Price = (Math.Round(bookInStore.Price * (subStock == null ? 1 : (decimal)(100 - subStock.Discount) / 100) * 100) / 100).ToString("#0.00")
                                }).ToList();
             }
+            resultSimpleEntities = null;
+            resultBooksReserved = null;
             TableName = "New books";
             OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
         }
@@ -247,6 +255,8 @@ namespace BookStore.Models
                                })
                                .ToList();
             }
+            resultSimpleEntities = null;
+            resultBooksReserved = null;
             TableName = "Best selling books";
             OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
         }
@@ -277,10 +287,80 @@ namespace BookStore.Models
                                })
                                .ToList();
             }
+            resultBooksReserved = null;
+            resultBooks = null;
             TableName = "Most popular authors";
             OnResultSimpleEntitiesViewChanged(new PropertyChangedEventArgs(nameof(ResultSimpleEntities)));
         }
-        public static string GetAuthorsByBookId(DbContextOptions<StoreContext> options, int bookId)
+        public void MostPopularGenresView()
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                resultSimpleEntities = (from bst in db.BookSolds
+                                        join bookInStore in db.BookInStores on bst.BookInStoreId equals bookInStore.Id
+                                        join book in db.Books on bookInStore.BookId equals book.Id
+                                        join genre in db.Genres on book.GenreId equals genre.Id
+                                        group genre by new { genre.Id, genre.Name } into grp
+                                        select new
+                                        {
+                                            grp.Key.Id,
+                                            grp.Key.Name,
+                                            CountBookSold = grp.Count()
+                                        })
+                               .OrderByDescending(g => g.CountBookSold)
+                               .Take(5)
+                               .Select(gr => new SimpleEntityView
+                               {
+                                   Id = gr.Id,
+                                   Name = gr.Name
+                               })
+                               .ToList();
+            }
+            resultBooksReserved = null;
+            resultBooks = null;
+            TableName = "Most popular genres";
+            OnResultSimpleEntitiesViewChanged(new PropertyChangedEventArgs(nameof(ResultSimpleEntities)));
+        }
+        public void ReservedBooksView()
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                resultBooksReserved = (from reservedBook in db.BookReserves
+                                       join bookInStore in db.BookInStores on reservedBook.BookInStoreId equals bookInStore.Id
+                                       join book in db.Books on bookInStore.BookId equals book.Id
+                                       join account in db.Accounts on reservedBook.AccountId equals account.Id into subTable //LEFT OUTHER JOIN Accounts
+                                       from resultAcc in subTable.DefaultIfEmpty()
+                                       join stock in (from s in db.Stocks //LEFT OUTHER JOIN Discounts
+                                                      where s.DateStart <= DateTime.Now && s.DateEnd >= DateTime.Now
+                                                      select s)
+                                              on bookInStore.Id equals stock.BookInStoreId into subResult
+                                       from subStock in subResult.DefaultIfEmpty()
+                                       select new BookReservedView
+                                       {
+                                           Id = reservedBook.Id,
+                                           BookName = book.Name,
+                                           Authors = String.Join(", ", db.Authors.Join(db.BookAuthors,
+                                                a => a.Id,
+                                                ba => ba.AuthorId,
+                                                (a, ba) => new
+                                                {
+                                                    AuthorId = a.Id,
+                                                    AuthorName = a.FullName,
+                                                    BookId = ba.BookId
+                                                }).Where(c => c.BookId == book.Id).Select(d => d.AuthorName)),
+                                           Description = reservedBook.Description,
+                                           Price = (Math.Round(bookInStore.Price * (subStock == null ? 1 : (decimal)(100 - subStock.Discount) / 100) * 100) / 100).ToString("#0.00"),
+                                           AccountLogin = (resultAcc == null ? "unknown" : resultAcc.Login),
+                                           DateReserve = reservedBook.DateReserve.ToShortDateString()
+                                       })
+                                       .ToList();
+            }
+            resultSimpleEntities = null;
+            resultBooks = null;
+            TableName = "Reserved books";
+            OnResultBooksReservedViewChanged(new PropertyChangedEventArgs(nameof(ResultBooksReserved)));
+        }
+        /*public static string GetAuthorsByBookId(DbContextOptions<StoreContext> options, int bookId)
         {
             using (StoreContext db = new StoreContext(options))
             {
@@ -295,6 +375,6 @@ namespace BookStore.Models
                 }).Where(c => c.BookId == bookId).Select(d => d.AuthorName);
                 return String.Join(", ", query);
             }
-        }
+        }*/
     }
 }
