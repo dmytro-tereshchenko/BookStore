@@ -43,7 +43,7 @@
             <Button Grid.Row="3" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding MostPopularAuthorsView}">Most popular authors</Button>
             <Button Grid.Row="4" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding MostPopularGenresView}">Most popular genres</Button>
             <Button Grid.Row="5" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding ReservedBooksView}">Reserved books</Button>
-            <Button Grid.Row="6" Style="{DynamicResource LeftTriangleButtonStyle}">Sold books</Button>
+            <Button Grid.Row="6" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding SoldBooksView}">Sold books</Button>
         </Grid>
         <Grid DockPanel.Dock="Right" Visibility="{Binding IsAdmin}">
             <Grid.RowDefinitions>
@@ -73,10 +73,10 @@
             <TextBlock x:Name="TableName" Text="{Binding TableName}"></TextBlock>
             <GroupBox Grid.Column="1" Header="Period" Visibility="{Binding IsPeriodBarUsed}">
                 <StackPanel Orientation="Horizontal">
-                    <RadioButton>Day</RadioButton>
-                    <RadioButton>Week</RadioButton>
-                    <RadioButton>Month</RadioButton>
-                    <RadioButton>Year</RadioButton>
+                    <RadioButton IsChecked="{Binding Period[Day]}" Command="{Binding PeriodChanged}">Day</RadioButton>
+                    <RadioButton IsChecked="{Binding Period[Week]}" Command="{Binding PeriodChanged}">Week</RadioButton>
+                    <RadioButton IsChecked="{Binding Period[Month]}" Command="{Binding PeriodChanged}">Month</RadioButton>
+                    <RadioButton IsChecked="{Binding Period[Year]}" Command="{Binding PeriodChanged}">Year</RadioButton>
                 </StackPanel>
             </GroupBox>
         </Grid>
@@ -94,6 +94,11 @@
                   AutoGeneratingColumn="dg_AutoGeneratingColumn" 
                   ItemsSource="{Binding ResultReservedBooksView}"
                   Visibility="{Binding IsReservedBookUsed}">
+            </DataGrid>
+            <DataGrid AutoGenerateColumns="True"
+                  AutoGeneratingColumn="dg_AutoGeneratingColumn" 
+                  ItemsSource="{Binding ResultSoldBooksView}"
+                  Visibility="{Binding IsSoldBookUsed}">
             </DataGrid>
             <DataGrid AutoGenerateColumns="True"
                   AutoGeneratingColumn="dg_AutoGeneratingColumn" 
