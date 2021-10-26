@@ -15,16 +15,16 @@
             <Button Content="{StaticResource iconLogout}" Visibility="{Binding IsLogIn}" Command="{Binding Logout}"/>
             <TextBlock Visibility="{Binding IsLogIn}" Text="{Binding LoginText}"/>
             <Label Target="{Binding ElementName=loginUser}" Visibility="{Binding IsLogOut}">Login</Label>
-            <TextBox x:Name="loginUser" Style="{StaticResource userTextBox}" Visibility="{Binding IsLogOut}" Text="{Binding LoginField, Mode=TwoWay}"/>
+            <TextBox x:Name="loginUser" Style="{StaticResource userTextBox}" Visibility="{Binding IsLogOut}" Text="{Binding LoginField}"/>
             <Label Target="{Binding ElementName=passwordUser}" Visibility="{Binding IsLogOut}">Password</Label>
             <PasswordBox x:Name="passwordUser" Visibility="{Binding IsLogOut}"/>
             <Button Visibility="{Binding IsLogOut}" Command="{Binding Login}" CommandParameter="{Binding ElementName=passwordUser}">Login</Button>
-            <Button DockPanel.Dock="Right">Search</Button>
-            <TextBox DockPanel.Dock="Right" x:Name="genreSearch" Style="{StaticResource searchTextBox}"/>
+            <Button DockPanel.Dock="Right" Command="{Binding Search}">Search</Button>
+            <TextBox DockPanel.Dock="Right" x:Name="genreSearch" Style="{StaticResource searchTextBox}" Text="{Binding GenreSearch}"/>
             <Label DockPanel.Dock="Right" Target="{Binding ElementName=genreSearch}">Genre</Label>
-            <TextBox DockPanel.Dock="Right" x:Name="authorSearch" Style="{StaticResource searchTextBox}"/>
+            <TextBox DockPanel.Dock="Right" x:Name="authorSearch" Style="{StaticResource searchTextBox}" Text="{Binding AuthorSearch}"/>
             <Label DockPanel.Dock="Right" Target="{Binding ElementName=authorSearch}">Author</Label>
-            <TextBox DockPanel.Dock="Right" x:Name="bookSearch" Style="{StaticResource searchTextBox}"/>
+            <TextBox DockPanel.Dock="Right" x:Name="bookSearch" Style="{StaticResource searchTextBox}" Text="{Binding BookSearch}"/>
             <Label DockPanel.Dock="Right" Target="{Binding ElementName=bookSearch}">Name of Book</Label>
         </DockPanel>
         <Grid DockPanel.Dock="Left">

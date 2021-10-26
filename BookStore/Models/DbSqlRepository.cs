@@ -18,10 +18,13 @@ namespace BookStore.Models
         private Account currentUser;
         private TypeResultView currentResultView;
         private string loginField;
-        private List<BookView> resultBooks;
-        private List<SimpleEntityView> resultSimpleEntities;
-        private List<BookReservedView> resultBooksReserved;
-        private List<BookSoldView> resultBooksSold;
+        private string bookSearch;
+        private string authorSearch;
+        private string genreSearch;
+        private IEnumerable<BookView> resultBooks;
+        private IEnumerable<SimpleEntityView> resultSimpleEntities;
+        private IEnumerable<BookReservedView> resultBooksReserved;
+        private IEnumerable<BookSoldView> resultBooksSold;
         public DbSqlRepository(DbContextOptions<StoreContext> options, string[] keysRadioButton)
         {
             this.options = options;
@@ -33,6 +36,9 @@ namespace BookStore.Models
         public Account CurrentUser { get => currentUser; }
         public RadioButtonRepository Period { get => period; }
         public string LoginField { get => loginField; set => loginField = value; }
+        public string BookSearch { get => bookSearch; set => bookSearch = value; }
+        public string AuthorSearch { get => authorSearch; set => authorSearch = value; }
+        public string GenreSearch { get => genreSearch; set => genreSearch = value; }
         public string TableName
         {
             get => currentResultView switch
@@ -44,13 +50,14 @@ namespace BookStore.Models
                 TypeResultView.MostPopularGenresView => "Most popular genres",
                 TypeResultView.ReservedBooksView => "Reserved books",
                 TypeResultView.SoldBooksView => "Sold books",
+                TypeResultView.ResultSearchView => "Search results",
                 _ => throw new NotImplementedException()
             };
         }
-        public List<BookView> ResultBooks { get => resultBooks; set => resultBooks = value; }
-        public List<SimpleEntityView> ResultSimpleEntities { get => resultSimpleEntities; set => resultSimpleEntities = value; }
-        public List<BookReservedView> ResultBooksReserved { get => resultBooksReserved; set => resultBooksReserved = value; }
-        public List<BookSoldView> ResultBooksSold { get => resultBooksSold; set => resultBooksSold = value; }
+        public IEnumerable<BookView> ResultBooks { get => resultBooks; set => resultBooks = value; }
+        public IEnumerable<SimpleEntityView> ResultSimpleEntities { get => resultSimpleEntities; set => resultSimpleEntities = value; }
+        public IEnumerable<BookReservedView> ResultBooksReserved { get => resultBooksReserved; set => resultBooksReserved = value; }
+        public IEnumerable<BookSoldView> ResultBooksSold { get => resultBooksSold; set => resultBooksSold = value; }
 
         public event EventHandler<EventArgs> CurrentUserChanged;
         public event EventHandler<EventArgs> ResultBooksViewChanged;
@@ -101,6 +108,54 @@ namespace BookStore.Models
             {
                 OnCurrentUserChanged(new PropertyChangedEventArgs(nameof(CurrentUser)));
             }
+        }
+        public void SearchBook()
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                resultBooks = (from bookInStore in db.BookInStores
+                               join book in db.Books on bookInStore.BookId equals book.Id
+                               join genre in db.Genres on book.GenreId equals genre.Id
+                               join publisher in db.Publishers on book.PublisherId equals publisher.Id
+                               join bsb in db.BookSeriesBooks on book.Id equals bsb.BookId into subBsbTable //LEFT OUTHER JOIN BookSeries
+                               from subBsb in subBsbTable.DefaultIfEmpty()
+                               join bs in db.BookSerieses on subBsb.BookSeriesId equals bs.Id into subBsTable //LEFT OUTHER JOIN BookSeries
+                               from subBs in subBsTable.DefaultIfEmpty()
+                               join stock in (from s in db.Stocks //LEFT OUTHER JOIN Discounts
+                                              where s.DateStart <= DateTime.Now && s.DateEnd >= DateTime.Now
+                                              select s)
+                                              on bookInStore.Id equals stock.BookInStoreId into subResult
+                               from subStock in subResult.DefaultIfEmpty()
+                               where bookInStore.Amount - ((from reserve in db.BookReserves //Filter for free books
+                                                            where bookInStore.Id == reserve.BookInStoreId
+                                                            select reserve).Count()) > 0 &&
+                                    (genreSearch == null || EF.Functions.Like(genre.Name, $"%{genreSearch}%")) &&
+                                    (bookSearch == null || EF.Functions.Like(book.Name, $"%{bookSearch}%"))
+                               select new BookView
+                               {
+                                   Id = bookInStore.Id,
+                                   Name = book.Name,
+                                   Authors = String.Join(", ", db.Authors.Join(db.BookAuthors,
+                                                a => a.Id,
+                                                ba => ba.AuthorId,
+                                                (a, ba) => new
+                                                {
+                                                    AuthorId = a.Id,
+                                                    AuthorName = a.FullName,
+                                                    BookId = ba.BookId
+                                                }).Where(c => c.BookId == book.Id).Select(d => d.AuthorName)),
+                                   Pages = book.Pages,
+                                   YearOfPublished = book.YearOfPublished,
+                                   Publisher = publisher.Name,
+                                   Genre = genre.Name,
+                                   Series = (subBsb == null || subBs == null ? "" : $"{subBs.Name} ({subBsb.Position} book)"),
+                                   Price = (Math.Round(bookInStore.Price * (subStock == null ? 1 : (decimal)(100 - subStock.Discount) / 100) * 100) / 100).ToString("#0.00")
+                               }).ToList()
+                                .Where((authorFilter) => authorSearch == null || authorFilter.Authors.Contains(authorSearch));
+            }
+            currentResultView = TypeResultView.ResultSearchView;
+            ClearViews();
+            OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
         }
         public void UserLogout()
         {
@@ -437,7 +492,8 @@ namespace BookStore.Models
         {
             if (currentResultView != TypeResultView.AllBooksView &&
             currentResultView != TypeResultView.NewBooksView &&
-            currentResultView != TypeResultView.BestSellingBooksView)
+            currentResultView != TypeResultView.BestSellingBooksView &&
+            currentResultView != TypeResultView.ResultSearchView)
             {
                 resultBooks = null;
             }

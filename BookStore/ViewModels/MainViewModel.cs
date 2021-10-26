@@ -26,6 +26,7 @@ namespace BookStore.ViewModels
         private ICommand reservedBooksView;
         private ICommand soldBooksView;
         private ICommand periodChanged;
+        private ICommand search;
         public MainViewModel(DbSqlRepository storeRepository)
         {
             this.storeRepository = storeRepository;
@@ -49,6 +50,7 @@ namespace BookStore.ViewModels
             mostPopularGenresView = new DelegateCommand(ShowMostPopularGenres);
             reservedBooksView = new DelegateCommand(ShowReservedBooks);
             soldBooksView = new DelegateCommand(ShowSoldBooks);
+            search = new DelegateCommand(SearchBook);
         }
         public Visibility IsAdmin { get => (storeRepository?.CurrentUser?.Admin ?? false) == true ? Visibility.Visible : Visibility.Collapsed; }
         public Visibility IsLogIn { get => storeRepository?.CurrentUser != null ? Visibility.Visible : Visibility.Collapsed; }
@@ -58,10 +60,10 @@ namespace BookStore.ViewModels
         public Visibility IsSimpleEntitiesUsed { get; set; }
         public Visibility IsReservedBookUsed { get; set; }
         public Visibility IsSoldBookUsed { get; set; }
-        public List<BookView> ResultBooksView { get => storeRepository.ResultBooks; set => storeRepository.ResultBooks = value; }
-        public List<SimpleEntityView> ResultSimpleEnitiesView { get => storeRepository.ResultSimpleEntities; set => storeRepository.ResultSimpleEntities = value; }
-        public List<BookReservedView> ResultReservedBooksView { get => storeRepository.ResultBooksReserved; set => storeRepository.ResultBooksReserved = value; }
-        public List<BookSoldView> ResultSoldBooksView { get => storeRepository.ResultBooksSold; set => storeRepository.ResultBooksSold = value; }
+        public IEnumerable<BookView> ResultBooksView { get => storeRepository.ResultBooks; set => storeRepository.ResultBooks = value; }
+        public IEnumerable<SimpleEntityView> ResultSimpleEnitiesView { get => storeRepository.ResultSimpleEntities; set => storeRepository.ResultSimpleEntities = value; }
+        public IEnumerable<BookReservedView> ResultReservedBooksView { get => storeRepository.ResultBooksReserved; set => storeRepository.ResultBooksReserved = value; }
+        public IEnumerable<BookSoldView> ResultSoldBooksView { get => storeRepository.ResultBooksSold; set => storeRepository.ResultBooksSold = value; }
         public ICommand Login => login;
         public ICommand Logout => logout;
         public ICommand PeriodChanged => periodChanged;
@@ -72,11 +74,27 @@ namespace BookStore.ViewModels
         public ICommand MostPopularGenresView => mostPopularGenresView;
         public ICommand ReservedBooksView => reservedBooksView;
         public ICommand SoldBooksView => soldBooksView;
+        public ICommand Search => search;
         public RadioButtonRepository Period { get => storeRepository.Period; }
         public string LoginField 
-        { 
+        {
             get => storeRepository.LoginField;
             set => storeRepository.LoginField = value;
+        }
+        public string BookSearch
+        {
+            get => storeRepository.BookSearch;
+            set => storeRepository.BookSearch = value;
+        }
+        public string AuthorSearch
+        {
+            get => storeRepository.AuthorSearch;
+            set => storeRepository.AuthorSearch = value;
+        }
+        public string GenreSearch
+        {
+            get => storeRepository.GenreSearch;
+            set => storeRepository.GenreSearch = value;
         }
         public string TableName { get => storeRepository.TableName; }
         public string LoginText { get => storeRepository?.CurrentUser?.Login ?? ""; }
@@ -186,6 +204,10 @@ namespace BookStore.ViewModels
         {
             IsPeriodBarUsed = Visibility.Collapsed;
             storeRepository.SoldBooksView();
+        }
+        private void SearchBook()
+        {
+            storeRepository.SearchBook();
         }
     }
 }

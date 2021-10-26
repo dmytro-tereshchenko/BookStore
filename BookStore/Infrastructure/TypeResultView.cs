@@ -14,6 +14,7 @@ namespace BookStore.Infrastructure
         MostPopularAuthorsView,
         MostPopularGenresView,
         ReservedBooksView,
-        SoldBooksView
+        SoldBooksView,
+        ResultSearchView
     }
 }
