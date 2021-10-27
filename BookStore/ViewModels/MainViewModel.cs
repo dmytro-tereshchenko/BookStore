@@ -27,6 +27,8 @@ namespace BookStore.ViewModels
         private ICommand soldBooksView;
         private ICommand periodChanged;
         private ICommand search;
+        private ICommand buyBook;
+        private ICommand reserveBook;
         public MainViewModel(DbSqlRepository storeRepository)
         {
             this.storeRepository = storeRepository;
@@ -51,6 +53,8 @@ namespace BookStore.ViewModels
             reservedBooksView = new DelegateCommand(ShowReservedBooks);
             soldBooksView = new DelegateCommand(ShowSoldBooks);
             search = new DelegateCommand(SearchBook);
+            buyBook = new DialogCommand(BuyBookFromStore, () => IsResultBooksUsed == Visibility.Visible);
+            reserveBook = new DialogCommand(ReserveBookInStore, () => IsResultBooksUsed == Visibility.Visible);
         }
         public Visibility IsAdmin { get => (storeRepository?.CurrentUser?.Admin ?? false) == true ? Visibility.Visible : Visibility.Collapsed; }
         public Visibility IsLogIn { get => storeRepository?.CurrentUser != null ? Visibility.Visible : Visibility.Collapsed; }
@@ -75,6 +79,8 @@ namespace BookStore.ViewModels
         public ICommand ReservedBooksView => reservedBooksView;
         public ICommand SoldBooksView => soldBooksView;
         public ICommand Search => search;
+        public ICommand BuyBook => buyBook;
+        public ICommand ReserveBook => reserveBook;
         public RadioButtonRepository Period { get => storeRepository.Period; }
         public string LoginField 
         {
@@ -208,6 +214,20 @@ namespace BookStore.ViewModels
         private void SearchBook()
         {
             storeRepository.SearchBook();
+        }
+        private void BuyBookFromStore(object book)
+        {
+            if (book is not null)
+            {
+                storeRepository.BuyBook(book as BookView);
+            }
+        }
+        private void ReserveBookInStore(object book)
+        {
+            if (book is not null)
+            {
+                storeRepository.BuyBook(book as BookView);
+            }
         }
     }
 }

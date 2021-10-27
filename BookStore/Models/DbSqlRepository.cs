@@ -487,7 +487,23 @@ namespace BookStore.Models
             ClearViews();
             OnResultBooksSoldViewChanged(new PropertyChangedEventArgs(nameof(ResultBooksSold)));
         }
-        
+        public void BuyBook(BookView buyBook)
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                BookInStore book = db.BookInStores.Find(buyBook.Id);
+                if (book is null || book.Amount < 1) return;
+                book.Amount -= 1;
+                db.BookSolds.Add(new BookSold()
+                {
+                    AccountId = currentUser?.Id ?? null,
+                    BookInStoreId = buyBook.Id,
+                    DateSold = DateTime.Now,
+                    SoldPrice = decimal.Parse(buyBook.Price)
+                });
+                db.SaveChanges();
+            }
+        }
         private void ClearViews()
         {
             if (currentResultView != TypeResultView.AllBooksView &&

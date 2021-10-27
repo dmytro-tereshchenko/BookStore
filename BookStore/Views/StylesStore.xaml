@@ -18,6 +18,13 @@
         <Setter Property="Width" Value="70"/>
         <Setter Property="Height" Value="20"/>
     </Style>
+    <Style TargetType="DataGrid">
+        <Setter Property="AutoGenerateColumns" Value="True"/>
+        <Setter Property="IsReadOnly" Value="True"/>
+        <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="CanUserDeleteRows" Value="False"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+    </Style>
     <!--<ControlTemplate x:Key="leftButtonTemplate" TargetType="{x:Type Button}">
         <Grid>
             <Grid.ColumnDefinitions>

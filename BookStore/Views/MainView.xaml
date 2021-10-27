@@ -81,29 +81,26 @@
             </GroupBox>
         </Grid>
         <UniformGrid DockPanel.Dock="Bottom" Columns="2">
-            <Button>Reserve</Button>
-            <Button>Buy</Button>
+            <Button Command="{Binding ReserveBook}" CommandParameter="{Binding SelectedItem, ElementName=resultBooksView}">Reserve</Button>
+            <Button Command="{Binding BuyBook}" CommandParameter="{Binding SelectedItem, ElementName=resultBooksView}">Buy</Button>
         </UniformGrid>
         <Grid>
-            <DataGrid AutoGenerateColumns="True"
-                  AutoGeneratingColumn="dg_AutoGeneratingColumn" 
+            <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
                   ItemsSource="{Binding ResultSimpleEnitiesView}"
                   Visibility="{Binding IsSimpleEntitiesUsed}">
             </DataGrid>
-            <DataGrid AutoGenerateColumns="True"
-                  AutoGeneratingColumn="dg_AutoGeneratingColumn" 
+            <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
                   ItemsSource="{Binding ResultReservedBooksView}"
                   Visibility="{Binding IsReservedBookUsed}">
             </DataGrid>
-            <DataGrid AutoGenerateColumns="True"
-                  AutoGeneratingColumn="dg_AutoGeneratingColumn" 
+            <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
                   ItemsSource="{Binding ResultSoldBooksView}"
                   Visibility="{Binding IsSoldBookUsed}">
             </DataGrid>
-            <DataGrid AutoGenerateColumns="True"
-                  AutoGeneratingColumn="dg_AutoGeneratingColumn" 
+            <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
                   ItemsSource="{Binding ResultBooksView}"
-                  Visibility="{Binding IsResultBooksUsed}">
+                  Visibility="{Binding IsResultBooksUsed}"
+                  x:Name="resultBooksView">
             </DataGrid>
         </Grid>
     </DockPanel>
