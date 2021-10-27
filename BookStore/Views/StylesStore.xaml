@@ -94,6 +94,42 @@
         </Grid>
     </ControlTemplate>-->
 
+    <ControlTemplate x:Key="ButtonTemplate" TargetType="{x:Type Button}">
+        <Grid>
+            <Border Name="border" Background= "{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="{TemplateBinding BorderThickness}" Margin="{TemplateBinding Margin}" CornerRadius="10">
+                <ContentPresenter Content= "{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                      Margin= "{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+            </Border>
+        </Grid>
+    </ControlTemplate>
+
+    <Style x:Key="DialogButtons" TargetType="{x:Type Button}">
+        <Style.Setters>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="Background" Value="Aquamarine"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="Template" Value="{StaticResource ButtonTemplate}"/>
+        </Style.Setters>
+        <Style.Triggers>
+            <Trigger Property="Button.IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#FF13DED5"/>
+            </Trigger>
+            <Trigger Property="Button.IsPressed" Value="True">
+                <Setter Property="Border.BorderBrush" Value="DarkGray" />
+                <Setter Property="Button.Effect">
+                    <Setter.Value>
+                        <DropShadowEffect Color="Black" Direction="320" ShadowDepth="3" BlurRadius="5" Opacity="0.5" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="Button.IsEnabled" Value="false">
+                <Setter Property="Background" Value="Azure"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 
 
     <StreamGeometry x:Key="LeftButtonGeometry">M0,0 L150,0 L170,15 L150,30 L0,30 L20,15 Z</StreamGeometry>

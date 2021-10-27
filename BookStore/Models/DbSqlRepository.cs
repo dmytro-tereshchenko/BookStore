@@ -33,6 +33,7 @@ namespace BookStore.Models
             Task loadBd = new Task(() => { using (StoreContext db = new StoreContext(options)) { db.Accounts.ToList(); } }); //Load accounts to cashe 
             loadBd.Start();
         }
+        public DbContextOptions<StoreContext> DbOptions { get => options; }
         public Account CurrentUser { get => currentUser; }
         public RadioButtonRepository Period { get => period; }
         public string LoginField { get => loginField; set => loginField = value; }

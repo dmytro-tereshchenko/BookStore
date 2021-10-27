@@ -26,7 +26,8 @@ namespace BookStore
             Configures config = new Configures("appsettings.json");
             DbContextOptions<StoreContext> options = config.GetOptions("DefaultConnection");
             DbSqlRepository repository = new DbSqlRepository(options, new string[] { "Day", "Week", "Month", "Year" });
-            IViewModel viewModel = new MainViewModel(repository);
+            NewViewFactory factory = new NewViewFactory();
+            IViewModel viewModel = new MainViewModel(repository, factory);
             var view = new MainView(viewModel);
             view.Show();
         }

@@ -16,6 +16,7 @@ namespace BookStore.ViewModels
     internal class MainViewModel : ViewModel
     {
         private DbSqlRepository storeRepository;
+        private NewViewFactory newViewFactory;
         private ICommand login;
         private ICommand logout;
         private ICommand allBooksView;
@@ -29,9 +30,10 @@ namespace BookStore.ViewModels
         private ICommand search;
         private ICommand buyBook;
         private ICommand reserveBook;
-        public MainViewModel(DbSqlRepository storeRepository)
+        public MainViewModel(DbSqlRepository storeRepository, NewViewFactory newViewFactory)
         {
             this.storeRepository = storeRepository;
+            this.newViewFactory = newViewFactory;
             storeRepository.CurrentUserChanged += OnCurrentUserChanged;
             storeRepository.ResultBooksViewChanged += OnResultBooksViewChanged;
             storeRepository.ResultSimpleEntitiesViewChanged += OnResultSimpleEnitiesViewChanged;
@@ -226,7 +228,7 @@ namespace BookStore.ViewModels
         {
             if (book is not null)
             {
-                storeRepository.BuyBook(book as BookView);
+                newViewFactory.CreateReserveBookView(storeRepository.DbOptions, book as BookView, storeRepository.CurrentUser);
             }
         }
     }
