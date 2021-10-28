@@ -40,6 +40,7 @@ namespace BookStore.Models
         public string BookSearch { get => bookSearch; set => bookSearch = value; }
         public string AuthorSearch { get => authorSearch; set => authorSearch = value; }
         public string GenreSearch { get => genreSearch; set => genreSearch = value; }
+        public string Message { get; set; }
         public string TableName
         {
             get => currentResultView switch
@@ -65,12 +66,14 @@ namespace BookStore.Models
         public event EventHandler<EventArgs> ResultSimpleEntitiesViewChanged;
         public event EventHandler<EventArgs> ResultBooksReservedViewChanged;
         public event EventHandler<EventArgs> ResultBooksSoldViewChanged;
+        public event EventHandler<EventArgs> MessageChanged;
 
         private void OnCurrentUserChanged(EventArgs e) => CurrentUserChanged?.Invoke(this, e);
         private void OnResultBooksViewChanged(EventArgs e) => ResultBooksViewChanged?.Invoke(this, e);
         private void OnResultSimpleEntitiesViewChanged(EventArgs e) => ResultSimpleEntitiesViewChanged?.Invoke(this, e);
         private void OnResultBooksReservedViewChanged(EventArgs e) => ResultBooksReservedViewChanged?.Invoke(this, e);
         private void OnResultBooksSoldViewChanged(EventArgs e) => ResultBooksSoldViewChanged?.Invoke(this, e);
+        private void OnMessageChanged(EventArgs e) => MessageChanged?.Invoke(this, e);
         /* private void OnCurrentUserChanged(EventArgs e)
          {
              var eventListeners = CurrentUserChanged.GetInvocationList();
@@ -108,6 +111,11 @@ namespace BookStore.Models
             if (currentUser != null)
             {
                 OnCurrentUserChanged(new PropertyChangedEventArgs(nameof(CurrentUser)));
+            }
+            else
+            {
+                Message = "Wrong login or password";
+                OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
             }
         }
         public void SearchBook()
@@ -493,7 +501,12 @@ namespace BookStore.Models
             using (StoreContext db = new StoreContext(options))
             {
                 BookInStore book = db.BookInStores.Find(buyBook.Id);
-                if (book is null || book.Amount < 1) return;
+                if (book is null || book.Amount < 1)
+                {
+                    Message = "Not found book or not free to sale";
+                    OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
+                    return;
+                }
                 book.Amount -= 1;
                 db.BookSolds.Add(new BookSold()
                 {
@@ -504,6 +517,8 @@ namespace BookStore.Models
                 });
                 db.SaveChanges();
             }
+            Message = "Book bought";
+            OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
         }
         private void ClearViews()
         {

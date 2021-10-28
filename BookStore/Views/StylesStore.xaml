@@ -96,7 +96,7 @@
 
     <ControlTemplate x:Key="ButtonTemplate" TargetType="{x:Type Button}">
         <Grid>
-            <Border Name="border" Background= "{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" 
+            <Border Background= "{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" 
                         BorderThickness="{TemplateBinding BorderThickness}" Margin="{TemplateBinding Margin}" CornerRadius="10">
                 <ContentPresenter Content= "{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
                                       Margin= "{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>

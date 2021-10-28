@@ -39,6 +39,7 @@ namespace BookStore.ViewModels
             storeRepository.ResultSimpleEntitiesViewChanged += OnResultSimpleEnitiesViewChanged;
             storeRepository.ResultBooksReservedViewChanged += OnResultReservedBooksViewChanged;
             storeRepository.ResultBooksSoldViewChanged += OnResultSoldBooksViewChanged;
+            storeRepository.MessageChanged += OnMessageChanged;
             IsPeriodBarUsed = Visibility.Collapsed;
             IsResultBooksUsed = Visibility.Visible;
             IsSimpleEntitiesUsed = Visibility.Collapsed;
@@ -169,6 +170,10 @@ namespace BookStore.ViewModels
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsReservedBookUsed)));
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsSoldBookUsed)));
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsPeriodBarUsed)));
+        }
+        private void OnMessageChanged(object sender, EventArgs e)
+        {
+            MessageBox.Show(storeRepository.Message);
         }
         private void LoginUser(object password)
         {

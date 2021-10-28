@@ -20,6 +20,7 @@ namespace BookStore.ViewModels
             this.model = model;
             ok = new DialogCommand(ReserveBook);
             cancel = new DialogCommand(CloseWindow);
+            model.MessageChanged += OnMessageChanged;
         }
         public ICommand Ok { get => ok; }
         public ICommand Cancel { get => cancel; }
@@ -42,6 +43,10 @@ namespace BookStore.ViewModels
             {
                 (window as Window).Close();
             }
+        }
+        private void OnMessageChanged(object sender, EventArgs e)
+        {
+            MessageBox.Show(model.Message);
         }
     }
 }
