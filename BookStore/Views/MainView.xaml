@@ -7,25 +7,24 @@
         xmlns:local="clr-namespace:BookStore"
         xmlns:w="clr-namespace:BookStore.Infrastructure"
         mc:Ignorable="d"
-        Title="Book store" Height="450" Width="850" MinHeight="320" MinWidth="800">
-    <Window.Resources>
-    </Window.Resources>
+        Title="Book store" Height="450" Width="850" MinHeight="320" MinWidth="800" 
+        Style="{StaticResource Window}">
     <DockPanel LastChildFill="True">
         <DockPanel DockPanel.Dock="Top" LastChildFill="False">
-            <Button Content="{StaticResource iconLogout}" Visibility="{Binding IsLogIn}" Command="{Binding Logout}"/>
-            <TextBlock Visibility="{Binding IsLogIn}" Text="{Binding LoginText}"/>
-            <Label Target="{Binding ElementName=loginUser}" Visibility="{Binding IsLogOut}">Login</Label>
-            <TextBox x:Name="loginUser" Style="{StaticResource userTextBox}" Visibility="{Binding IsLogOut}" Text="{Binding LoginField}"/>
-            <Label Target="{Binding ElementName=passwordUser}" Visibility="{Binding IsLogOut}">Password</Label>
+            <Button Content="{StaticResource IconLogout}" Visibility="{Binding IsLogIn}" Command="{Binding Logout}" Style="{StaticResource IconButton}"/>
+            <TextBlock Visibility="{Binding IsLogIn}" Text="{Binding LoginText}" Style="{StaticResource TopBarTextBlock}"/>
+            <Label Target="{Binding ElementName=loginUser}" Visibility="{Binding IsLogOut}" Style="{StaticResource TopBarLabel}">Login</Label>
+            <TextBox x:Name="loginUser" Style="{StaticResource UserTextBox}" Visibility="{Binding IsLogOut}" Text="{Binding LoginField}"/>
+            <Label Target="{Binding ElementName=passwordUser}" Visibility="{Binding IsLogOut}" Style="{StaticResource TopBarLabel}">Password</Label>
             <PasswordBox x:Name="passwordUser" Visibility="{Binding IsLogOut}"/>
-            <Button Visibility="{Binding IsLogOut}" Command="{Binding Login}" CommandParameter="{Binding ElementName=passwordUser}">Login</Button>
-            <Button DockPanel.Dock="Right" Command="{Binding Search}">Search</Button>
-            <TextBox DockPanel.Dock="Right" x:Name="genreSearch" Style="{StaticResource searchTextBox}" Text="{Binding GenreSearch}"/>
-            <Label DockPanel.Dock="Right" Target="{Binding ElementName=genreSearch}">Genre</Label>
-            <TextBox DockPanel.Dock="Right" x:Name="authorSearch" Style="{StaticResource searchTextBox}" Text="{Binding AuthorSearch}"/>
-            <Label DockPanel.Dock="Right" Target="{Binding ElementName=authorSearch}">Author</Label>
-            <TextBox DockPanel.Dock="Right" x:Name="bookSearch" Style="{StaticResource searchTextBox}" Text="{Binding BookSearch}"/>
-            <Label DockPanel.Dock="Right" Target="{Binding ElementName=bookSearch}">Name of Book</Label>
+            <Button Visibility="{Binding IsLogOut}" Command="{Binding Login}" CommandParameter="{Binding ElementName=passwordUser}" Style="{StaticResource TopBarButtons}">Login</Button>
+            <Button DockPanel.Dock="Right" Command="{Binding Search}" Style="{StaticResource TopBarButtons}">Search</Button>
+            <TextBox DockPanel.Dock="Right" x:Name="genreSearch" Style="{StaticResource SearchTextBox}" Text="{Binding GenreSearch}"/>
+            <Label DockPanel.Dock="Right" Target="{Binding ElementName=genreSearch}" Style="{StaticResource TopBarLabel}">Genre</Label>
+            <TextBox DockPanel.Dock="Right" x:Name="authorSearch" Style="{StaticResource SearchTextBox}" Text="{Binding AuthorSearch}"/>
+            <Label DockPanel.Dock="Right" Target="{Binding ElementName=authorSearch}" Style="{StaticResource TopBarLabel}">Author</Label>
+            <TextBox DockPanel.Dock="Right" x:Name="bookSearch" Style="{StaticResource SearchTextBox}" Text="{Binding BookSearch}"/>
+            <Label DockPanel.Dock="Right" Target="{Binding ElementName=bookSearch}" Style="{StaticResource TopBarLabel}">Name of Book</Label>
         </DockPanel>
         <Grid DockPanel.Dock="Left">
             <Grid.RowDefinitions>
@@ -70,7 +69,7 @@
                 <ColumnDefinition />
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="TableName" Text="{Binding TableName}"></TextBlock>
+            <TextBlock x:Name="TableName" Text="{Binding TableName}" Style="{StaticResource TableName}"></TextBlock>
             <GroupBox Grid.Column="1" Header="Period" Visibility="{Binding IsPeriodBarUsed}">
                 <StackPanel Orientation="Horizontal">
                     <RadioButton IsChecked="{Binding Period[Day]}" Command="{Binding PeriodChanged}">Day</RadioButton>
@@ -81,8 +80,8 @@
             </GroupBox>
         </Grid>
         <UniformGrid DockPanel.Dock="Bottom" Columns="2">
-            <Button Command="{Binding ReserveBook}" CommandParameter="{Binding SelectedItem, ElementName=resultBooksView}">Reserve</Button>
-            <Button Command="{Binding BuyBook}" CommandParameter="{Binding SelectedItem, ElementName=resultBooksView}">Buy</Button>
+            <Button Command="{Binding ReserveBook}" CommandParameter="{Binding SelectedItem, ElementName=resultBooksView}" Style="{StaticResource TopBarButtons}">Reserve</Button>
+            <Button Command="{Binding BuyBook}" CommandParameter="{Binding SelectedItem, ElementName=resultBooksView}" Style="{StaticResource TopBarButtons}">Buy</Button>
         </UniformGrid>
         <Grid>
             <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"

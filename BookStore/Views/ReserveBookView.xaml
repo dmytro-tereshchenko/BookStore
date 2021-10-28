@@ -7,7 +7,9 @@
         xmlns:local="clr-namespace:BookStore.Views"
         mc:Ignorable="d"
         x:Name="window"
-        Title="Reserve Book" Height="450" Width="500">
+        Title="Reserve Book" Height="500" Width="500"
+        MinHeight="450" MinWidth="400"
+        Style="{StaticResource Window}">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -24,22 +26,22 @@
             <RowDefinition Height="3*"/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
-        <Label>Book Name</Label>
-        <TextBlock Grid.Column="1" Text="{Binding NameBook}"/>
-        <Label Grid.Row="1">Authors</Label>
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Authors}"/>
-        <Label Grid.Row="2">Publication year</Label>
-        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding PublicationYear}"/>
-        <Label Grid.Row="3">Publisher</Label>
-        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Publisher}"/>
-        <Label Grid.Row="4">Genre</Label>
-        <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Genre}"/>
-        <Label Grid.Row="5">Series</Label>
-        <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Series}"/>
-        <Label Grid.Row="6">Price</Label>
-        <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Price}"/>
-        <Label Grid.Row="7">Desription</Label>
-        <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Description}"/>
+        <Label Style="{StaticResource LabelToTextBlockDialog}">Book Name</Label>
+        <TextBox Grid.Column="1" Text="{Binding NameBook, Mode=OneTime}" Style="{StaticResource TextBlockDialog}"/>
+        <Label Grid.Row="1" Style="{StaticResource LabelToTextBlockDialog}">Authors</Label>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Authors, Mode=OneTime}" Style="{StaticResource TextBlockDialog}"/>
+        <Label Grid.Row="2" Style="{StaticResource LabelToTextBlockDialog}">Publication year</Label>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding PublicationYear, Mode=OneTime}" Style="{StaticResource TextBlockDialog}"/>
+        <Label Grid.Row="3" Style="{StaticResource LabelToTextBlockDialog}">Publisher</Label>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Publisher, Mode=OneTime}" Style="{StaticResource TextBlockDialog}"/>
+        <Label Grid.Row="4" Style="{StaticResource LabelToTextBlockDialog}">Genre</Label>
+        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Genre, Mode=OneTime}" Style="{StaticResource TextBlockDialog}"/>
+        <Label Grid.Row="5" Style="{StaticResource LabelToTextBlockDialog}">Series</Label>
+        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Series, Mode=OneTime}" Style="{StaticResource TextBlockDialog}"/>
+        <Label Grid.Row="6" Style="{StaticResource LabelToTextBlockDialog}">Price</Label>
+        <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Price, Mode=OneTime}" Style="{StaticResource TextBlockDialog}"/>
+        <Label Grid.Row="7" Target="{Binding ElementName=description}" Style="{StaticResource LabelToTextBoxDialog}">Desription</Label>
+        <TextBox Grid.Row="7" Grid.Column="1" x:Name="description" Text="{Binding Description}" Style="{StaticResource TextBoxDialog}"/>
         <UniformGrid Columns="2" Grid.Row="8" Grid.ColumnSpan="2">
             <Button Command="{Binding Ok}" CommandParameter="{Binding ElementName=window}" Style="{StaticResource DialogButtons}">OK</Button>
             <Button Command="{Binding Cancel}" CommandParameter="{Binding ElementName=window}" Style="{StaticResource DialogButtons}">Cancel</Button>

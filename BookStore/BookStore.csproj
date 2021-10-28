@@ -7,10 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\background.webp" />
     <None Remove="Images\logout_1.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Images\background.webp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\logout_1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
