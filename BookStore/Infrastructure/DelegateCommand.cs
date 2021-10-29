@@ -11,13 +11,13 @@ namespace BookStore.Infrastructure
         private static readonly Func<bool> defaultCanExecuteMethod = () => true;
 
         private Func<bool> canExecuteMethod;
-        private readonly Action executeMethod;
+        private readonly Func<Task> executeMethod;
 
-        public DelegateCommand(Action executeMethod) :
+        public DelegateCommand(Func<Task> executeMethod) :
             this(executeMethod, defaultCanExecuteMethod)
         { }
 
-        public DelegateCommand(Action executeMethod, Func<bool> canExecuteMethod)
+        public DelegateCommand(Func<Task> executeMethod, Func<bool> canExecuteMethod)
         {
             this.canExecuteMethod = canExecuteMethod;
             this.executeMethod = executeMethod;
@@ -25,7 +25,7 @@ namespace BookStore.Infrastructure
 
         public override bool CanExecute() => canExecuteMethod();
 
-        public override void Execute() => executeMethod();
-        public override void Execute(object parameter) { }
+        public async override Task ExecuteAsync() => await executeMethod();
+        public async override Task ExecuteAsync(object parameter) { await Task.CompletedTask; }
     }
 }

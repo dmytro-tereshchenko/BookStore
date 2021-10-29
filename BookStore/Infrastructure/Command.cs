@@ -13,18 +13,18 @@ namespace BookStore.Infrastructure
 
         public virtual bool CanExecute() => true;
 
-        public abstract void Execute();
-        public abstract void Execute(object parameter);
+        public abstract Task ExecuteAsync();
+        public abstract Task ExecuteAsync(object parameter);
 
-        protected virtual void OnCanExecuteChanged(EventArgs e) => CanExecuteChanged?.Invoke(this, e);
-        public void RaiseCanExecuteChanged() => OnCanExecuteChanged(EventArgs.Empty);
+        protected async virtual void OnCanExecuteAsyncChanged(EventArgs e) => await CanExecuteChanged?.InvokeAsync(this, e);
+        public void RaiseCanExecuteAsyncChanged() => OnCanExecuteAsyncChanged(EventArgs.Empty);
 
         bool ICommand.CanExecute(object parameter) => CanExecute();
 
         void ICommand.Execute(object parameter)
         {
-            Execute();
-            Execute(parameter);
+            ExecuteAsync();
+            ExecuteAsync(parameter);
         }
     }
 }

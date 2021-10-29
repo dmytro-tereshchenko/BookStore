@@ -32,17 +32,18 @@ namespace BookStore.ViewModels
         public string Series { get => model.Book.Series; }
         public string Price { get => model.Book.Price; }
         public string Description { get => model.Description; set => model.Description = value; }
-        private void ReserveBook(object window)
+        private async Task ReserveBook(object window)
         {
-            model.AddReservedBook();
-            CloseWindow(window);
+            await model.AddReservedBook();
+            await CloseWindow(window);
         }
-        private void CloseWindow(object window)
+        private async Task CloseWindow(object window)
         {
             if (window is Window)
             {
                 (window as Window).Close();
             }
+            await Task.CompletedTask;
         }
         private void OnMessageChanged(object sender, EventArgs e)
         {

@@ -175,66 +175,67 @@ namespace BookStore.ViewModels
         {
             MessageBox.Show(storeRepository.Message);
         }
-        private void LoginUser(object password)
+        private async Task LoginUser(object password)
         {
-            storeRepository.UserLogIn((password as PasswordBox).Password);
+            await storeRepository.UserLogIn((password as PasswordBox).Password);
             (password as PasswordBox).Password = "";
         }
         
-        private void PeriodChange() => storeRepository.PeriodChanged();
-        private void LogoutUser() => storeRepository.UserLogout();
-        private void ShowAllBooks()
+        private async Task PeriodChange() => await storeRepository.PeriodChanged();
+        private async Task LogoutUser() => await storeRepository.UserLogout();
+        private async Task ShowAllBooks()
         {
             IsPeriodBarUsed = Visibility.Collapsed;
-            storeRepository.AllBooksView();
+            await storeRepository.AllBooksView();
         }
-        private void ShowNewBooks()
+        private async Task ShowNewBooks()
         {
             IsPeriodBarUsed = Visibility.Visible;
-            storeRepository.NewBooksView();
+            await storeRepository.NewBooksView();
         }
-        private void ShowBestSellingBooks()
+        private async Task ShowBestSellingBooks()
         {
             IsPeriodBarUsed = Visibility.Visible;
-            storeRepository.BestSellingBooksView();
+            await storeRepository.BestSellingBooksView();
         }
-        private void ShowMostPopularAuthors()
+        private async Task ShowMostPopularAuthors()
         {
             IsPeriodBarUsed = Visibility.Visible;
-            storeRepository.MostPopularAuthorsView();
+            await storeRepository.MostPopularAuthorsView();
         }
-        private void ShowMostPopularGenres()
+        private async Task ShowMostPopularGenres()
         {
             IsPeriodBarUsed = Visibility.Visible;
-            storeRepository.MostPopularGenresView();
+            await storeRepository .MostPopularGenresView();
         }
-        private void ShowReservedBooks()
+        private async Task ShowReservedBooks()
         {
             IsPeriodBarUsed = Visibility.Collapsed;
-            storeRepository.ReservedBooksView();
+            await storeRepository .ReservedBooksView();
         }
-        private void ShowSoldBooks()
+        private async Task ShowSoldBooks()
         {
             IsPeriodBarUsed = Visibility.Collapsed;
-            storeRepository.SoldBooksView();
+            await storeRepository .SoldBooksView();
         }
-        private void SearchBook()
+        private async Task SearchBook()
         {
-            storeRepository.SearchBook();
+            await storeRepository .SearchBook();
         }
-        private void BuyBookFromStore(object book)
+        private async Task BuyBookFromStore(object book)
         {
             if (book is not null)
             {
-                storeRepository.BuyBook(book as BookView);
+                await storeRepository .BuyBook(book as BookView);
             }
         }
-        private void ReserveBookInStore(object book)
+        private async Task ReserveBookInStore(object book)
         {
             if (book is not null)
             {
                 newViewFactory.CreateReserveBookView(storeRepository.DbOptions, book as BookView, storeRepository.CurrentUser);
             }
+            await Task.CompletedTask;
         }
     }
 }

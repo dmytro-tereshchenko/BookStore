@@ -1,4 +1,5 @@
-﻿using BookStore.Models.Db;
+﻿using BookStore.Infrastructure;
+using BookStore.Models.Db;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -27,17 +28,17 @@ namespace BookStore.Models
 
         public event EventHandler<EventArgs> MessageChanged;
 
-        private void OnMessageChanged(EventArgs e) => MessageChanged?.Invoke(this, e);
+        private async Task OnMessageChanged(EventArgs e) => await MessageChanged?.InvokeAsync(this, e);
 
-        public void AddReservedBook()
+        public async Task AddReservedBook()
         {
             using (StoreContext db = new StoreContext(options))
             {
-                BookInStore dbBook = db.BookInStores.Find(book.Id);
+                BookInStore dbBook = await db.BookInStores.FindAsync(book.Id);
                 if (dbBook is null || dbBook.Amount < 1) 
                 {
                     Message = "Not found book or not free to sale";
-                    OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
+                    await OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
                     return; 
                 }
                 db.BookReserves.Add(new BookReserve()
@@ -47,10 +48,10 @@ namespace BookStore.Models
                     AccountId = account?.Id ?? null,
                     DateReserve = DateTime.Now
                 });
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
             Message = "Book reserved";
-            OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
+            await OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
         }
     }
 }
