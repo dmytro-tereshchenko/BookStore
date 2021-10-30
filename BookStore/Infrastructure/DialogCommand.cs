@@ -11,13 +11,13 @@ namespace BookStore.Infrastructure
         private static readonly Func<bool> defaultCanExecuteMethod = () => true;
 
         private Func<bool> canExecuteMethod;
-        private readonly Action<object> executeMethod;
+        private readonly Func<object, Task> executeMethod;
 
-        public DialogCommand(Action<object> executeMethod) :
+        public DialogCommand(Func<object, Task> executeMethod) :
             this(executeMethod, defaultCanExecuteMethod)
         { }
 
-        public DialogCommand(Action<object> executeMethod, Func<bool> canExecuteMethod)
+        public DialogCommand(Func<object, Task> executeMethod, Func<bool> canExecuteMethod)
         {
             this.canExecuteMethod = canExecuteMethod;
             this.executeMethod = executeMethod;
@@ -25,7 +25,7 @@ namespace BookStore.Infrastructure
 
         public override bool CanExecute() => canExecuteMethod();
 
-        public override void Execute(object parameter) => executeMethod(parameter);
-        public override void Execute() { }
+        public async override Task ExecuteAsync(object parameter) => await executeMethod(parameter);
+        public async override Task ExecuteAsync() { await Task.CompletedTask; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BookStore.Interfaces;
+﻿using BookStore.Infrastructure;
+using BookStore.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,6 +13,6 @@ namespace BookStore.ViewModels
     internal abstract class ViewModel : INotifyPropertyChanged, IViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
+        protected async virtual Task OnPropertyChanged(PropertyChangedEventArgs e) => await PropertyChanged?.InvokeAsync(this, e);
     }
 }
