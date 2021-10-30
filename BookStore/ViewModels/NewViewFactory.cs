@@ -12,7 +12,7 @@ namespace BookStore.ViewModels
 {
     internal class NewViewFactory
     {
-        public void CreateReserveBookView(DbContextOptions<StoreContext> options, BookView book, Account account = null)
+        public void CreateReserveBookView(DbContextOptions<StoreContext> options, BookViewShow book, Account account = null)
         {
             ReserveBookModel model = new ReserveBookModel(options, book, account);
             ReserveBookViewModel modelView = new ReserveBookViewModel(model);

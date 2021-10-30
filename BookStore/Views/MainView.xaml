@@ -11,14 +11,14 @@
         Style="{StaticResource Window}">
     <DockPanel LastChildFill="True">
         <DockPanel DockPanel.Dock="Top" LastChildFill="False">
-            <Button Content="{StaticResource IconLogout}" Visibility="{Binding IsLogIn}" Command="{Binding Logout}" Style="{StaticResource IconButton}"/>
+            <Button Content="{StaticResource IconLogout}" Visibility="{Binding IsLogIn}" Command="{Binding Commands[Logout]}" Style="{StaticResource IconButton}"/>
             <TextBlock Visibility="{Binding IsLogIn}" Text="{Binding LoginText}" Style="{StaticResource TopBarTextBlock}"/>
             <Label Target="{Binding ElementName=loginUser}" Visibility="{Binding IsLogOut}" Style="{StaticResource TopBarLabel}">Login</Label>
             <TextBox x:Name="loginUser" Style="{StaticResource UserTextBox}" Visibility="{Binding IsLogOut}" Text="{Binding LoginField}"/>
             <Label Target="{Binding ElementName=passwordUser}" Visibility="{Binding IsLogOut}" Style="{StaticResource TopBarLabel}">Password</Label>
             <PasswordBox x:Name="passwordUser" Visibility="{Binding IsLogOut}"/>
-            <Button Visibility="{Binding IsLogOut}" Command="{Binding Login}" CommandParameter="{Binding ElementName=passwordUser}" Style="{StaticResource TopBarButtons}">Login</Button>
-            <Button DockPanel.Dock="Right" Command="{Binding SearchView}" Style="{StaticResource TopBarButtons}">Search</Button>
+            <Button Visibility="{Binding IsLogOut}" Command="{Binding Commands[Login]}" CommandParameter="{Binding ElementName=passwordUser}" Style="{StaticResource TopBarButtons}">Login</Button>
+            <Button DockPanel.Dock="Right" Command="{Binding Commands[SearchView]}" Style="{StaticResource TopBarButtons}">Search</Button>
             <TextBox DockPanel.Dock="Right" x:Name="genreSearch" Style="{StaticResource SearchTextBox}" Text="{Binding GenreSearch}"/>
             <Label DockPanel.Dock="Right" Target="{Binding ElementName=genreSearch}" Style="{StaticResource TopBarLabel}">Genre</Label>
             <TextBox DockPanel.Dock="Right" x:Name="authorSearch" Style="{StaticResource SearchTextBox}" Text="{Binding AuthorSearch}"/>
@@ -36,13 +36,13 @@
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Button Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding AllBooksView}">All books</Button>
-            <Button Grid.Row="1" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding NewBooksView}">New books</Button>
-            <Button Grid.Row="2" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding BestSellingBooksView}">Best selling books</Button>
-            <Button Grid.Row="3" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding MostPopularAuthorsView}">Most popular authors</Button>
-            <Button Grid.Row="4" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding MostPopularGenresView}">Most popular genres</Button>
-            <Button Grid.Row="5" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding ReservedBooksView}">Reserved books</Button>
-            <Button Grid.Row="6" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding SoldBooksView}">Sold books</Button>
+            <Button Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding Commands[AllBooksView]}">All books</Button>
+            <Button Grid.Row="1" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding Commands[NewBooksView]}">New books</Button>
+            <Button Grid.Row="2" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding Commands[BestSellingBooksView]}">Best selling books</Button>
+            <Button Grid.Row="3" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding Commands[MostPopularAuthorsView]}">Most popular authors</Button>
+            <Button Grid.Row="4" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding Commands[MostPopularGenresView]}">Most popular genres</Button>
+            <Button Grid.Row="5" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding Commands[ReservedBooksView]}">Reserved books</Button>
+            <Button Grid.Row="6" Style="{DynamicResource LeftTriangleButtonStyle}" Command="{Binding Commands[SoldBooksView]}">Sold books</Button>
         </Grid>
         <Grid DockPanel.Dock="Right" Visibility="{Binding IsAdmin}">
             <Grid.RowDefinitions>
@@ -55,14 +55,14 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button Style="{DynamicResource RightTriangleButtonStyle}" Command="{Binding ManageAccountsView}">Manage accounts</Button>
-            <Button Grid.Row="1" Style="{DynamicResource RightTriangleButtonStyle}">Manage authors</Button>
-            <Button Grid.Row="2" Style="{DynamicResource RightTriangleButtonStyle}">Manage genres</Button>
-            <Button Grid.Row="3" Style="{DynamicResource RightTriangleButtonStyle}">Manage publishers</Button>
-            <Button Grid.Row="4" Style="{DynamicResource RightTriangleButtonStyle}">Manage books</Button>
-            <Button Grid.Row="5" Style="{DynamicResource RightTriangleButtonStyle}">Manage books is store</Button>
-            <Button Grid.Row="6" Style="{DynamicResource RightTriangleButtonStyle}">Manage stocks</Button>
-            <Button Grid.Row="7" Style="{DynamicResource RightTriangleButtonStyle}">Manage series</Button>
+            <Button Style="{DynamicResource RightTriangleButtonStyle}" Command="{Binding Commands[ManageAccountsView]}">Manage accounts</Button>
+            <Button Grid.Row="1" Style="{DynamicResource RightTriangleButtonStyle}" Command="{Binding Commands[ManageAuthorsView]}">Manage authors</Button>
+            <Button Grid.Row="2" Style="{DynamicResource RightTriangleButtonStyle}" Command="{Binding Commands[ManageGenresView]}">Manage genres</Button>
+            <Button Grid.Row="3" Style="{DynamicResource RightTriangleButtonStyle}" Command="{Binding Commands[ManagePublishersView]}">Manage publishers</Button>
+            <Button Grid.Row="4" Style="{DynamicResource RightTriangleButtonStyle}" Command="{Binding Commands[ManageBooksView]}">Manage books</Button>
+            <Button Grid.Row="5" Style="{DynamicResource RightTriangleButtonStyle}" Command="{Binding Commands[ManageBooksInStoreView]}">Manage books is store</Button>
+            <Button Grid.Row="6" Style="{DynamicResource RightTriangleButtonStyle}" Command="{Binding Commands[ManageStocksView]}">Manage stocks</Button>
+            <Button Grid.Row="7" Style="{DynamicResource RightTriangleButtonStyle}" Command="{Binding Commands[ManageBookSeriesView]}">Manage series</Button>
         </Grid>
         <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
@@ -72,16 +72,16 @@
             <TextBlock x:Name="TableName" Text="{Binding TableName}" Style="{StaticResource TableName}"></TextBlock>
             <GroupBox Grid.Column="1" Header="Period" Visibility="{Binding IsPeriodBarUsed}">
                 <StackPanel Orientation="Horizontal">
-                    <RadioButton IsChecked="{Binding Period[Day]}" Command="{Binding PeriodChanged}">Day</RadioButton>
-                    <RadioButton IsChecked="{Binding Period[Week]}" Command="{Binding PeriodChanged}">Week</RadioButton>
-                    <RadioButton IsChecked="{Binding Period[Month]}" Command="{Binding PeriodChanged}">Month</RadioButton>
-                    <RadioButton IsChecked="{Binding Period[Year]}" Command="{Binding PeriodChanged}">Year</RadioButton>
+                    <RadioButton IsChecked="{Binding Period[Day]}" Command="{Binding Commands[PeriodChanged]}">Day</RadioButton>
+                    <RadioButton IsChecked="{Binding Period[Week]}" Command="{Binding Commands[PeriodChanged]}">Week</RadioButton>
+                    <RadioButton IsChecked="{Binding Period[Month]}" Command="{Binding Commands[PeriodChanged]}">Month</RadioButton>
+                    <RadioButton IsChecked="{Binding Period[Year]}" Command="{Binding Commands[PeriodChanged]}">Year</RadioButton>
                 </StackPanel>
             </GroupBox>
         </Grid>
         <UniformGrid DockPanel.Dock="Bottom" Columns="2">
-            <Button Command="{Binding ReserveBook}" CommandParameter="{Binding SelectedItem, ElementName=resultBooksView}" Style="{StaticResource TopBarButtons}">Reserve</Button>
-            <Button Command="{Binding BuyBook}" CommandParameter="{Binding SelectedItem, ElementName=resultBooksView}" Style="{StaticResource TopBarButtons}">Buy</Button>
+            <Button Command="{Binding Commands[ReserveBook]}" CommandParameter="{Binding SelectedItem, ElementName=resultBooksView}" Style="{StaticResource TopBarButtons}">Reserve</Button>
+            <Button Command="{Binding Commands[BuyBook]}" CommandParameter="{Binding SelectedItem, ElementName=resultBooksView}" Style="{StaticResource TopBarButtons}">Buy</Button>
         </UniformGrid>
         <Border BorderThickness="2" BorderBrush="#FF6468B2">
             <Grid>
@@ -116,9 +116,114 @@
                   x:Name="manageAccountsView">
                     </DataGrid>
                     <UniformGrid Grid.Column="1" Rows="3">
-                        <Button Command="{Binding NewAccount}" Style="{StaticResource TopBarButtons}">New</Button>
-                        <Button Command="{Binding EditAccount}" CommandParameter="{Binding SelectedItem, ElementName=manageAccountsView}" Style="{StaticResource TopBarButtons}">Edit</Button>
-                        <Button Command="{Binding DeleteAccount}" CommandParameter="{Binding SelectedItem, ElementName=manageAccountsView}" Style="{StaticResource TopBarButtons}">Delete</Button>
+                        <Button Command="{Binding Commands[NewAccount]}" Style="{StaticResource TopBarButtons}">New</Button>
+                        <Button Command="{Binding Commands[EditAccount]}" CommandParameter="{Binding SelectedItem, ElementName=manageAccountsView}" Style="{StaticResource TopBarButtons}">Edit</Button>
+                        <Button Command="{Binding Commands[DeleteAccount]}" CommandParameter="{Binding SelectedItem, ElementName=manageAccountsView}" Style="{StaticResource TopBarButtons}">Delete</Button>
+                    </UniformGrid>
+                </Grid>
+                <Grid Visibility="{Binding IsManageAuthorsUsed}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
+                  ItemsSource="{Binding ResultManageAuthorsView}"
+                  x:Name="manageAuthorsView">
+                    </DataGrid>
+                    <UniformGrid Grid.Column="1" Rows="3">
+                        <Button Command="{Binding Commands[NewAuthor]}" Style="{StaticResource TopBarButtons}">New</Button>
+                        <Button Command="{Binding Commands[EditAuthor]}" CommandParameter="{Binding SelectedItem, ElementName=manageAuthorsView}" Style="{StaticResource TopBarButtons}">Edit</Button>
+                        <Button Command="{Binding Commands[DeleteAuthor]}" CommandParameter="{Binding SelectedItem, ElementName=manageAuthorsView}" Style="{StaticResource TopBarButtons}">Delete</Button>
+                    </UniformGrid>
+                </Grid>
+                <Grid Visibility="{Binding IsManageGenresUsed}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
+                  ItemsSource="{Binding ResultManageGenresView}"
+                  x:Name="manageGenresView">
+                    </DataGrid>
+                    <UniformGrid Grid.Column="1" Rows="3">
+                        <Button Command="{Binding Commands[NewGenre]}" Style="{StaticResource TopBarButtons}">New</Button>
+                        <Button Command="{Binding Commands[EditGenre]}" CommandParameter="{Binding SelectedItem, ElementName=manageGenresView}" Style="{StaticResource TopBarButtons}">Edit</Button>
+                        <Button Command="{Binding Commands[DeleteGenre]}" CommandParameter="{Binding SelectedItem, ElementName=manageGenresView}" Style="{StaticResource TopBarButtons}">Delete</Button>
+                    </UniformGrid>
+                </Grid>
+                <Grid Visibility="{Binding IsManagePublishersUsed}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
+                  ItemsSource="{Binding ResultManagePublishersView}"
+                  x:Name="managePublishersView">
+                    </DataGrid>
+                    <UniformGrid Grid.Column="1" Rows="3">
+                        <Button Command="{Binding Commands[NewPublisher]}" Style="{StaticResource TopBarButtons}">New</Button>
+                        <Button Command="{Binding Commands[EditPublisher]}" CommandParameter="{Binding SelectedItem, ElementName=managePublishersView}" Style="{StaticResource TopBarButtons}">Edit</Button>
+                        <Button Command="{Binding Commands[DeletePublisher]}" CommandParameter="{Binding SelectedItem, ElementName=managePublishersView}" Style="{StaticResource TopBarButtons}">Delete</Button>
+                    </UniformGrid>
+                </Grid>
+                <Grid Visibility="{Binding IsManageBooksUsed}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
+                  ItemsSource="{Binding ResultManageBooksView}"
+                  x:Name="manageBooksView">
+                    </DataGrid>
+                    <UniformGrid Grid.Column="1" Rows="3">
+                        <Button Command="{Binding Commands[NewBook]}" Style="{StaticResource TopBarButtons}">New</Button>
+                        <Button Command="{Binding Commands[EditBook]}" CommandParameter="{Binding SelectedItem, ElementName=manageBooksView}" Style="{StaticResource TopBarButtons}">Edit</Button>
+                        <Button Command="{Binding Commands[DeleteBook]}" CommandParameter="{Binding SelectedItem, ElementName=manageBooksView}" Style="{StaticResource TopBarButtons}">Delete</Button>
+                    </UniformGrid>
+                </Grid>
+                <Grid Visibility="{Binding IsManageBooksInStoreUsed}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
+                  ItemsSource="{Binding ResultManageBooksInStoreView}"
+                  x:Name="manageBooksInStoreView">
+                    </DataGrid>
+                    <UniformGrid Grid.Column="1" Rows="3">
+                        <Button Command="{Binding Commands[NewBookInStore]}" Style="{StaticResource TopBarButtons}">New</Button>
+                        <Button Command="{Binding Commands[EditBookInStore]}" CommandParameter="{Binding SelectedItem, ElementName=manageBooksInStoreView}" Style="{StaticResource TopBarButtons}">Edit</Button>
+                        <Button Command="{Binding Commands[DeleteBookInStore]}" CommandParameter="{Binding SelectedItem, ElementName=manageBooksInStoreView}" Style="{StaticResource TopBarButtons}">Delete</Button>
+                    </UniformGrid>
+                </Grid>
+                <Grid Visibility="{Binding IsManageStocksUsed}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
+                  ItemsSource="{Binding ResultManageStocksView}"
+                  x:Name="manageStocksView">
+                    </DataGrid>
+                    <UniformGrid Grid.Column="1" Rows="3">
+                        <Button Command="{Binding Commands[NewStock]}" Style="{StaticResource TopBarButtons}">New</Button>
+                        <Button Command="{Binding Commands[EditStock]}" CommandParameter="{Binding SelectedItem, ElementName=manageStocksView}" Style="{StaticResource TopBarButtons}">Edit</Button>
+                        <Button Command="{Binding Commands[DeleteStock]}" CommandParameter="{Binding SelectedItem, ElementName=manageStocksView}" Style="{StaticResource TopBarButtons}">Delete</Button>
+                    </UniformGrid>
+                </Grid>
+                <Grid Visibility="{Binding IsManageBookSeriesUsed}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
+                  ItemsSource="{Binding ResultManageBookSeriesView}"
+                  x:Name="manageBookSeriesView">
+                    </DataGrid>
+                    <UniformGrid Grid.Column="1" Rows="3">
+                        <Button Command="{Binding Commands[NewBookSeries]}" Style="{StaticResource TopBarButtons}">New</Button>
+                        <Button Command="{Binding Commands[EditBookSeries]}" CommandParameter="{Binding SelectedItem, ElementName=manageBookSeriesView}" Style="{StaticResource TopBarButtons}">Edit</Button>
+                        <Button Command="{Binding Commands[DeleteBookSeries]}" CommandParameter="{Binding SelectedItem, ElementName=manageBookSeriesView}" Style="{StaticResource TopBarButtons}">Delete</Button>
                     </UniformGrid>
                 </Grid>
             </Grid>

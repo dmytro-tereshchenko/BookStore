@@ -13,16 +13,16 @@ namespace BookStore.Models
     internal class ReserveBookModel
     {
         private DbContextOptions<StoreContext> options;
-        private BookView book;
+        private BookViewShow book;
         private Account account;
         private string description;
-        public ReserveBookModel(DbContextOptions<StoreContext> options, BookView book, Account account = null)
+        public ReserveBookModel(DbContextOptions<StoreContext> options, BookViewShow book, Account account = null)
         {
             this.options = options;
             this.book = book;
             this.account = account;
         }
-        public BookView Book { get => book; }
+        public BookViewShow Book { get => book; }
         public string Description { get => description; set => description = value; }
         public string Message { get; set; }
 

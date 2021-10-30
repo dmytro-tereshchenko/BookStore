@@ -21,11 +21,18 @@ namespace BookStore.Models
         private string bookSearch;
         private string authorSearch;
         private string genreSearch;
-        private IEnumerable<BookView> resultBooks;
+        private IEnumerable<BookViewShow> resultBooks;
         private IEnumerable<SimpleEntityView> resultSimpleEntities;
         private IEnumerable<BookReservedView> resultBooksReserved;
         private IEnumerable<BookSoldView> resultBooksSold;
         private IEnumerable<AccountView> resultManageAccounts;
+        private IEnumerable<AuthorView> resultManageAuthors;
+        private IEnumerable<GenreView> resultManageGenres;
+        private IEnumerable<PublisherView> resultManagePublishers;
+        private IEnumerable<BookView> resultManageBooks;
+        private IEnumerable<BookInStoreView> resultManageBooksInStore;
+        private IEnumerable<StockView> resultManageStocks;
+        private IEnumerable<BookSeriesView> resultManageBookSeries;
         public DbSqlRepository(DbContextOptions<StoreContext> options, string[] keysRadioButton)
         {
             this.options = options;
@@ -56,14 +63,28 @@ namespace BookStore.Models
                 TypeResultView.SoldBooksView => "Sold books",
                 TypeResultView.ResultSearchView => "Search results",
                 TypeResultView.ResultManageAccountsView => "Accounts",
+                TypeResultView.ResultManageAuthorsView => "Authors",
+                TypeResultView.ResultManageGenresView => "Genres",
+                TypeResultView.ResultManagePublishersView => "Publishers",
+                TypeResultView.ResultManageBooksView => "Books",
+                TypeResultView.ResultManageBooksInStoreView => "Books in Store",
+                TypeResultView.ResultManageStocksView => "Stocks",
+                TypeResultView.ResultManageBookSeriesView => "Series",
                 _ => throw new NotImplementedException()
             };
         }
-        public IEnumerable<BookView> ResultBooksView { get => resultBooks; set => resultBooks = value; }
+        public IEnumerable<BookViewShow> ResultBooksView { get => resultBooks; set => resultBooks = value; }
         public IEnumerable<SimpleEntityView> ResultSimpleEnitiesView { get => resultSimpleEntities; set => resultSimpleEntities = value; }
         public IEnumerable<BookReservedView> ResultReservedBooksView { get => resultBooksReserved; set => resultBooksReserved = value; }
         public IEnumerable<BookSoldView> ResultSoldBooksView { get => resultBooksSold; set => resultBooksSold = value; }
         public IEnumerable<AccountView> ResultManageAccountsView { get => resultManageAccounts; set => resultManageAccounts = value; }
+        public IEnumerable<AuthorView> ResultManageAuthorsView { get => resultManageAuthors; set => resultManageAuthors = value; }
+        public IEnumerable<GenreView> ResultManageGenresView { get => resultManageGenres; set => resultManageGenres = value; }
+        public IEnumerable<PublisherView> ResultManagePublishersView { get => resultManagePublishers; set => resultManagePublishers = value; }
+        public IEnumerable<BookView> ResultManageBooksView { get => resultManageBooks; set => resultManageBooks = value; }
+        public IEnumerable<BookInStoreView> ResultManageBooksInStoreView { get => resultManageBooksInStore; set => resultManageBooksInStore = value; }
+        public IEnumerable<StockView> ResultManageStocksView { get => resultManageStocks; set => resultManageStocks = value; }
+        public IEnumerable<BookSeriesView> ResultManageBookSeriesView { get => resultManageBookSeries; set => resultManageBookSeries = value; }
 
         public event EventHandler<EventArgs> CurrentUserChanged;
         public event EventHandler<EventArgs> MessageChanged;
@@ -111,7 +132,7 @@ namespace BookStore.Models
                                                                 select reserve).Count()) > 0 &&
                                         (genreSearch == null || EF.Functions.Like(genre.Name, $"%{genreSearch}%")) &&
                                         (bookSearch == null || EF.Functions.Like(book.Name, $"%{bookSearch}%"))
-                                   select new BookView
+                                   select new BookViewShow
                                    {
                                        Id = bookInStore.Id,
                                        Name = book.Name,
@@ -183,7 +204,7 @@ namespace BookStore.Models
                                      where bookInStore.Amount - ((from reserve in db.BookReserves //Filter for free books
                                                                   where bookInStore.Id == reserve.BookInStoreId
                                                                   select reserve).Count()) > 0
-                                     select new BookView
+                                     select new BookViewShow
                                      {
                                          Id = bookInStore.Id,
                                          Name = book.Name,
@@ -229,7 +250,7 @@ namespace BookStore.Models
                                                                   where bookInStore.Id == reserve.BookInStoreId
                                                                   select reserve).Count()) > 0
                                      where bookInStore.DateAdded > DateTime.Now.AddDays(-GetDays())
-                                     select new BookView
+                                     select new BookViewShow
                                      {
                                          Id = bookInStore.Id,
                                          Name = book.Name,
@@ -269,7 +290,7 @@ namespace BookStore.Models
                                    join bs in db.BookSerieses on subBsb.BookSeriesId equals bs.Id into subBsTable //LEFT OUTHER JOIN BookSeries
                                    from subBs in subBsTable.DefaultIfEmpty()
                                    where bookSold.DateSold > DateTime.Now.AddDays(-GetDays())
-                                   select new BookView
+                                   select new BookViewShow
                                    {
                                        Id = bookInStore.Id,
                                        Name = book.Name,
@@ -316,7 +337,7 @@ namespace BookStore.Models
                     BooksCount = grp.Count()
                 })
                 .OrderByDescending(b => b.BooksCount)
-                .Take(5).Select(r => new BookView
+                .Take(5).Select(r => new BookViewShow
                 {
                     Id = r.Id,
                     Name = r.Name,
@@ -483,7 +504,148 @@ namespace BookStore.Models
             ClearViews();
             await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultManageAccountsView)));
         }
-        public async Task BuyBook(BookView buyBook)
+        public async Task ManageAuthorsView()
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                resultManageAuthors = await (from author in db.Authors
+                                             select new AuthorView
+                                             {
+                                                 Id = author.Id,
+                                                 FirstName = author.FirstName,
+                                                 MiddleName = author.MiddleName,
+                                                 LastName = author.LastName
+                                             })
+                                   .ToListAsync();
+            }
+            currentResultView = TypeResultView.ResultManageAuthorsView;
+            ClearViews();
+            await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultManageAuthorsView)));
+        }
+        public async Task ManageGenresView()
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                resultManageGenres = await (from genre in db.Genres
+                                            select new GenreView
+                                            {
+                                                Id = genre.Id,
+                                                Name = genre.Name
+                                            })
+                                   .ToListAsync();
+            }
+            currentResultView = TypeResultView.ResultManageGenresView;
+            ClearViews();
+            await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultManageGenresView)));
+        }
+        public async Task ManagePublishersView()
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                resultManagePublishers = await (from publisher in db.Publishers
+                                                select new PublisherView
+                                                {
+                                                    Id = publisher.Id,
+                                                    Name = publisher.Name
+                                                })
+                                   .ToListAsync();
+            }
+            currentResultView = TypeResultView.ResultManagePublishersView;
+            ClearViews();
+            await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultManagePublishersView)));
+        }
+        public async Task ManageBooksView()
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                resultManageBooks = await (from book in db.Books
+                                           join genre in db.Genres on book.GenreId equals genre.Id
+                                           join publisher in db.Publishers on book.PublisherId equals publisher.Id
+                                           join bsb in db.BookSeriesBooks on book.Id equals bsb.BookId into subBsbTable //LEFT OUTHER JOIN BookSeries
+                                           from subBsb in subBsbTable.DefaultIfEmpty()
+                                           join bs in db.BookSerieses on subBsb.BookSeriesId equals bs.Id into subBsTable //LEFT OUTHER JOIN BookSeries
+                                           from subBs in subBsTable.DefaultIfEmpty()
+                                           select new BookView
+                                           {
+                                               Id = book.Id,
+                                               Name = book.Name,
+                                               Authors = String.Join(", ", db.Authors.Join(db.BookAuthors,
+                                                            a => a.Id,
+                                                            ba => ba.AuthorId,
+                                                            (a, ba) => new
+                                                            {
+                                                                AuthorId = a.Id,
+                                                                AuthorName = a.FullName,
+                                                                BookId = ba.BookId
+                                                            }).Where(c => c.BookId == book.Id).Select(d => d.AuthorName)),
+                                               Pages = book.Pages,
+                                               YearOfPublished = book.YearOfPublished,
+                                               Publisher = publisher.Name,
+                                               Genre = genre.Name,
+                                               Series = (subBsb == null || subBs == null ? "" : subBs.Name),
+                                               SeriesPosition = (subBsb == null || subBs == null||subBsb.Position == null ? "" : subBsb.Position.ToString())
+                                           }).ToListAsync();
+            }
+            currentResultView = TypeResultView.ResultManageBooksView;
+            ClearViews();
+            await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultManageBooksView)));
+        }
+        public async Task ManageBooksInStoreView()
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                resultManageBooksInStore = await (from bookInStore in db.BookInStores
+                                           join book in db.Books on bookInStore.BookId equals book.Id
+                                           select new BookInStoreView
+                                           {
+                                               Id = bookInStore.Id,
+                                               Book = book.Name,
+                                               CostPrice = bookInStore.CostPrice.ToString("#0.00"),
+                                               Price = bookInStore.Price.ToString("#0.00"),
+                                               Amount = bookInStore.Amount,
+                                               DateAdded=bookInStore.DateAdded
+                                           }).ToListAsync();
+            }
+            currentResultView = TypeResultView.ResultManageBooksInStoreView;
+            ClearViews();
+            await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultManageBooksInStoreView)));
+        }
+        public async Task ManageStocksView()
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                resultManageStocks = await (from bookInStore in db.BookInStores
+                                            join book in db.Books on bookInStore.BookId equals book.Id
+                                            join stock in db.Stocks on bookInStore.Id equals stock.BookInStoreId
+                                            select new StockView
+                                            {
+                                                Id = stock.Id,
+                                                BookInStore = book.Name,
+                                                Discount = stock.Discount.ToString("#0.00"),
+                                                DateStart = stock.DateStart,
+                                                DateEnd = stock.DateEnd
+                                            }).ToListAsync();
+            }
+            currentResultView = TypeResultView.ResultManageStocksView;
+            ClearViews();
+            await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultManageStocksView)));
+        }
+        public async Task ManageBookSeriesView()
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                resultManageBookSeries = await (from bookSeries in db.BookSerieses
+                                                select new BookSeriesView
+                                                {
+                                                    Id = bookSeries.Id,
+                                                    Name = bookSeries.Name
+                                                }).ToListAsync();
+            }
+            currentResultView = TypeResultView.ResultManageBookSeriesView;
+            ClearViews();
+            await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultManageBookSeriesView)));
+        }
+        public async Task BuyBook(BookViewShow buyBook)
         {
             using (StoreContext db = new StoreContext(options))
             {
@@ -520,10 +682,132 @@ namespace BookStore.Models
                 }
                 db.Accounts.Remove(accountInDb);
                 await db.SaveChangesAsync();
-                
             }
-            Message = "Account Removed";
+            Message = "Account removed";
             await ManageAccountsView();
+        }
+        public async Task DeleteAuthor(AuthorView author)
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                Author authorInDb = await db.Authors.FindAsync(author.Id);
+                if (authorInDb is null)
+                {
+                    Message = "Not found author";
+                    await OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
+                    return;
+                }
+                db.BookAuthors.RemoveRange(db.BookAuthors.Where(ba => ba.AuthorId == authorInDb.Id));
+                db.Authors.Remove(authorInDb);
+                await db.SaveChangesAsync();
+            }
+            Message = "Author removed";
+            await ManageAuthorsView();
+        }
+        public async Task DeleteGenre(GenreView genre)
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                Genre genreInDb = await db.Genres.FindAsync(genre.Id);
+                if (genreInDb is null)
+                {
+                    Message = "Not found genre";
+                    await OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
+                    return;
+                }
+                db.Genres.Remove(genreInDb);
+                await db.SaveChangesAsync();
+            }
+            Message = "Genre removed";
+            await ManageGenresView();
+        }
+        public async Task DeletePublisher(PublisherView publisher)
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                Publisher publisherInDb = await db.Publishers.FindAsync(publisher.Id);
+                if (publisherInDb is null)
+                {
+                    Message = "Not found publisher";
+                    await OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
+                    return;
+                }
+                db.Publishers.Remove(publisherInDb);
+                await db.SaveChangesAsync();
+            }
+            Message = "Publisher removed";
+            await ManagePublishersView();
+        }
+        public async Task DeleteBook(BookView book)
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                Book bookInDb = await db.Books.FindAsync(book.Id);
+                if (bookInDb is null)
+                {
+                    Message = "Not found book";
+                    await OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
+                    return;
+                }
+                db.BookSeriesBooks.RemoveRange(db.BookSeriesBooks.Where(bsb => bsb.BookId == bookInDb.Id));
+                db.BookAuthors.RemoveRange(db.BookAuthors.Where(ba => ba.BookId == bookInDb.Id));
+                db.Books.Remove(bookInDb);
+                await db.SaveChangesAsync();
+            }
+            Message = "Book removed";
+            await ManageBooksView();
+        }
+        public async Task DeleteBookInStore(BookInStoreView bookInStore)
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                BookInStore bookInStoreInDb = await db.BookInStores.FindAsync(bookInStore.Id);
+                if (bookInStoreInDb is null)
+                {
+                    Message = "Not found book in store";
+                    await OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
+                    return;
+                }
+                db.BookInStores.Remove(bookInStoreInDb);
+                await db.SaveChangesAsync();
+            }
+            Message = "Book in store removed";
+            await ManageBooksInStoreView();
+        }
+        public async Task DeleteStock(StockView stock)
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                Stock stockInDb = await db.Stocks.FindAsync(stock.Id);
+                if (stockInDb is null)
+                {
+                    Message = "Not found stock";
+                    await OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
+                    return;
+                }
+                db.Stocks.Remove(stockInDb);
+                await db.SaveChangesAsync();
+            }
+            Message = "Stock removed";
+            await ManageStocksView();
+        }
+        public async Task DeleteBookSeries(BookSeriesView bookSeries)
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                BookSeries stockInDb = await db.BookSerieses.FindAsync(bookSeries.Id);
+                if (stockInDb is null)
+                {
+                    Message = "Not found stock";
+                    await OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
+                    return;
+                }
+                db.BookSeriesBooks.RemoveRange(db.BookSeriesBooks.Where(bsb => bsb.BookSeriesId == stockInDb.Id));
+                db.BookSerieses.Remove(stockInDb);
+                await db.SaveChangesAsync();
+            }
+            Message = "Book series removed";
+            await ManageBookSeriesView();
         }
         private void ClearViews()
         {

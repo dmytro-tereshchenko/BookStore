@@ -16,6 +16,13 @@ namespace BookStore.Infrastructure
         ReservedBooksView,
         SoldBooksView,
         ResultSearchView,
-        ResultManageAccountsView
+        ResultManageAccountsView,
+        ResultManageAuthorsView,
+        ResultManageGenresView,
+        ResultManagePublishersView,
+        ResultManageBooksView,
+        ResultManageBooksInStoreView,
+        ResultManageStocksView,
+        ResultManageBookSeriesView
     }
 }

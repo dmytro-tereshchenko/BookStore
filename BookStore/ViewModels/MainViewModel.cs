@@ -17,23 +17,7 @@ namespace BookStore.ViewModels
     {
         private DbSqlRepository storeRepository;
         private NewViewFactory newViewFactory;
-        private ICommand login;
-        private ICommand logout;
-        private ICommand allBooksView;
-        private ICommand newBooksView;
-        private ICommand bestSellingBooksView;
-        private ICommand mostPopularAuthorsView;
-        private ICommand mostPopularGenresView;
-        private ICommand reservedBooksView;
-        private ICommand soldBooksView;
-        private ICommand periodChanged;
-        private ICommand searchView;
-        private ICommand buyBook;
-        private ICommand reserveBook;
-        private ICommand manageAccountsView;
-        private ICommand newAccount;
-        private ICommand editAccount;
-        private ICommand deleteAccount;
+        private IDictionary<string, ICommand> commands;
         public MainViewModel(DbSqlRepository storeRepository, NewViewFactory newViewFactory)
         {
             this.storeRepository = storeRepository;
@@ -42,23 +26,52 @@ namespace BookStore.ViewModels
             storeRepository.MessageChanged += OnMessageChanged;
             storeRepository.ResultViewChanged += OnResultViewChanged;
             IsPeriodBarUsed = Visibility.Collapsed;
-            login = new DialogCommand(LoginUser); ;
-            logout = new DelegateCommand(LogoutUser);
-            periodChanged = new DelegateCommand(PeriodChange);
-            allBooksView = new DelegateCommand(ShowAllBooks);
-            newBooksView = new DelegateCommand(ShowNewBooks);
-            bestSellingBooksView = new DelegateCommand(ShowBestSellingBooks);
-            mostPopularAuthorsView = new DelegateCommand(ShowMostPopularAuthors);
-            mostPopularGenresView = new DelegateCommand(ShowMostPopularGenres);
-            reservedBooksView = new DelegateCommand(ShowReservedBooks);
-            soldBooksView = new DelegateCommand(ShowSoldBooks);
-            searchView = new DelegateCommand(SearchBook);
-            buyBook = new DialogCommand(BuyBookFromStore, () => IsResultBooksUsed == Visibility.Visible);
-            reserveBook = new DialogCommand(ReserveBookInStore, () => IsResultBooksUsed == Visibility.Visible);
-            manageAccountsView = new DelegateCommand(ManagedAccountsAdmin);
-            newAccount = new DelegateCommand(CreateAccountInRepository);
-            editAccount = new DialogCommand(EditAccountInRepository);
-            deleteAccount = new DialogCommand(DeleteAccountInRepository);
+            commands = new Dictionary<string, ICommand>();
+            commands.Add("Login", new DialogCommand(LoginUser));
+            commands.Add("Logout", new DelegateCommand(LogoutUser));
+            commands.Add("PeriodChanged", new DelegateCommand(PeriodChange));
+            commands.Add("AllBooksView", new DelegateCommand(ShowAllBooks));
+            commands.Add("NewBooksView", new DelegateCommand(ShowNewBooks));
+            commands.Add("BestSellingBooksView", new DelegateCommand(ShowBestSellingBooks));
+            commands.Add("MostPopularAuthorsView", new DelegateCommand(ShowMostPopularAuthors));
+            commands.Add("MostPopularGenresView", new DelegateCommand(ShowMostPopularGenres));
+            commands.Add("ReservedBooksView", new DelegateCommand(ShowReservedBooks));
+            commands.Add("SoldBooksView", new DelegateCommand(ShowSoldBooks));
+            commands.Add("SearchView", new DelegateCommand(SearchBook));
+            commands.Add("BuyBook", new DialogCommand(BuyBookFromStore, () => IsResultBooksUsed == Visibility.Visible));
+            commands.Add("ReserveBook", new DialogCommand(ReserveBookInStore, () => IsResultBooksUsed == Visibility.Visible));
+            commands.Add("ManageAccountsView", new DelegateCommand(ManagedAccountsAdmin));
+            commands.Add("ManageAuthorsView", new DelegateCommand(ManagedAuthorsAdmin));
+            commands.Add("ManageGenresView", new DelegateCommand(ManagedGenresAdmin));
+            commands.Add("ManagePublishersView", new DelegateCommand(ManagedPublishersAdmin));
+            commands.Add("ManageBooksView", new DelegateCommand(ManagedBooksAdmin));
+            commands.Add("ManageBooksInStoreView", new DelegateCommand(ManagedBooksInStoreAdmin));
+            commands.Add("ManageStocksView", new DelegateCommand(ManagedStocksAdmin));
+            commands.Add("ManageBookSeriesView", new DelegateCommand(ManagedBookSeriesAdmin));
+            commands.Add("NewAccount", new DelegateCommand(CreateAccountInRepository));
+            commands.Add("NewAuthor", new DelegateCommand(CreateAuthorInRepository));
+            commands.Add("NewGenre", new DelegateCommand(CreateGenreInRepository));
+            commands.Add("NewPublisher", new DelegateCommand(CreatePublisherInRepository));
+            commands.Add("NewBook", new DelegateCommand(CreateBookInRepository));
+            commands.Add("NewBookInStore", new DelegateCommand(CreateBookInStoreInRepository));
+            commands.Add("NewStock", new DelegateCommand(CreateStockInRepository));
+            commands.Add("NewBookSeries", new DelegateCommand(CreateBookSeriesInRepository));
+            commands.Add("EditAccount", new DialogCommand(EditAccountInRepository));
+            commands.Add("EditAuthor", new DialogCommand(EditAuthorInRepository));
+            commands.Add("EditGenre", new DialogCommand(EditGenreInRepository));
+            commands.Add("EditPublisher", new DialogCommand(EditPublisherInRepository));
+            commands.Add("EditBook", new DialogCommand(EditBookInRepository));
+            commands.Add("EditBookInStore", new DialogCommand(EditBookInStoreInRepository));
+            commands.Add("EditStock", new DialogCommand(EditStockInRepository));
+            commands.Add("EditBookSeries", new DialogCommand(EditBookSeriesInRepository));
+            commands.Add("DeleteAccount", new DialogCommand(DeleteAccountInRepository));
+            commands.Add("DeleteAuthor", new DialogCommand(DeleteAuthorInRepository));
+            commands.Add("DeleteGenre", new DialogCommand(DeleteGenreInRepository));
+            commands.Add("DeletePublisher", new DialogCommand(DeletePublisherInRepository));
+            commands.Add("DeleteBook", new DialogCommand(DeleteBookInRepository));
+            commands.Add("DeleteBookInStore", new DialogCommand(DeleteBookInStoreInRepository));
+            commands.Add("DeleteStock", new DialogCommand(DeleteStockInRepository));
+            commands.Add("DeleteBookSeries", new DialogCommand(DeleteBookSeriesInRepository));
         }
         /*public Visibility IsAdmin { get => (storeRepository?.CurrentUser?.Admin ?? false) == true ? Visibility.Visible : Visibility.Collapsed; }*/
         public Visibility IsAdmin { get => Visibility.Visible; }
@@ -80,28 +93,26 @@ namespace BookStore.ViewModels
         public Visibility IsReservedBookUsed { get=> storeRepository.TypeResultView == TypeResultView.ReservedBooksView ? Visibility.Visible : Visibility.Collapsed; }
         public Visibility IsSoldBookUsed { get => storeRepository.TypeResultView == TypeResultView.SoldBooksView ? Visibility.Visible : Visibility.Collapsed; }
         public Visibility IsManageAccountsUsed { get => storeRepository.TypeResultView == TypeResultView.ResultManageAccountsView ? Visibility.Visible : Visibility.Collapsed; }
-        public IEnumerable<BookView> ResultBooksView { get => storeRepository.ResultBooksView; set => storeRepository.ResultBooksView = value; }
+        public Visibility IsManageAuthorsUsed { get => storeRepository.TypeResultView == TypeResultView.ResultManageAuthorsView ? Visibility.Visible : Visibility.Collapsed; }
+        public Visibility IsManageGenresUsed { get => storeRepository.TypeResultView == TypeResultView.ResultManageGenresView ? Visibility.Visible : Visibility.Collapsed; }
+        public Visibility IsManagePublishersUsed { get => storeRepository.TypeResultView == TypeResultView.ResultManagePublishersView ? Visibility.Visible : Visibility.Collapsed; }
+        public Visibility IsManageBooksUsed { get => storeRepository.TypeResultView == TypeResultView.ResultManageBooksView ? Visibility.Visible : Visibility.Collapsed; }
+        public Visibility IsManageBooksInStoreUsed { get => storeRepository.TypeResultView == TypeResultView.ResultManageBooksInStoreView ? Visibility.Visible : Visibility.Collapsed; }
+        public Visibility IsManageStocksUsed { get => storeRepository.TypeResultView == TypeResultView.ResultManageStocksView ? Visibility.Visible : Visibility.Collapsed; }
+        public Visibility IsManageBookSeriesUsed { get => storeRepository.TypeResultView == TypeResultView.ResultManageBookSeriesView ? Visibility.Visible : Visibility.Collapsed; }
+        public IEnumerable<BookViewShow> ResultBooksView { get => storeRepository.ResultBooksView; set => storeRepository.ResultBooksView = value; }
         public IEnumerable<SimpleEntityView> ResultSimpleEnitiesView { get => storeRepository.ResultSimpleEnitiesView; set => storeRepository.ResultSimpleEnitiesView = value; }
         public IEnumerable<BookReservedView> ResultReservedBooksView { get => storeRepository.ResultReservedBooksView; set => storeRepository.ResultReservedBooksView = value; }
         public IEnumerable<BookSoldView> ResultSoldBooksView { get => storeRepository.ResultSoldBooksView; set => storeRepository.ResultSoldBooksView = value; }
         public IEnumerable<AccountView> ResultManageAccountsView { get => storeRepository.ResultManageAccountsView; set => storeRepository.ResultManageAccountsView = value; }
-        public ICommand Login => login;
-        public ICommand Logout => logout;
-        public ICommand PeriodChanged => periodChanged;
-        public ICommand AllBooksView => allBooksView;
-        public ICommand NewBooksView => newBooksView;
-        public ICommand BestSellingBooksView => bestSellingBooksView;
-        public ICommand MostPopularAuthorsView => mostPopularAuthorsView;
-        public ICommand MostPopularGenresView => mostPopularGenresView;
-        public ICommand ReservedBooksView => reservedBooksView;
-        public ICommand SoldBooksView => soldBooksView;
-        public ICommand SearchView => searchView;
-        public ICommand BuyBook => buyBook;
-        public ICommand ReserveBook => reserveBook;
-        public ICommand ManageAccountsView => manageAccountsView;
-        public ICommand NewAccount => newAccount;
-        public ICommand EditAccount => editAccount;
-        public ICommand DeleteAccount => deleteAccount;
+        public IEnumerable<AuthorView> ResultManageAuthorsView { get => storeRepository.ResultManageAuthorsView; set => storeRepository.ResultManageAuthorsView = value; }
+        public IEnumerable<GenreView> ResultManageGenresView { get => storeRepository.ResultManageGenresView; set => storeRepository.ResultManageGenresView = value; }
+        public IEnumerable<PublisherView> ResultManagePublishersView { get => storeRepository.ResultManagePublishersView; set => storeRepository.ResultManagePublishersView = value; }
+        public IEnumerable<BookView> ResultManageBooksView { get => storeRepository.ResultManageBooksView; set => storeRepository.ResultManageBooksView = value; }
+        public IEnumerable<BookInStoreView> ResultManageBooksInStoreView { get => storeRepository.ResultManageBooksInStoreView; set => storeRepository.ResultManageBooksInStoreView = value; }
+        public IEnumerable<StockView> ResultManageStocksView { get => storeRepository.ResultManageStocksView; set => storeRepository.ResultManageStocksView = value; }
+        public IEnumerable<BookSeriesView> ResultManageBookSeriesView { get => storeRepository.ResultManageBookSeriesView; set => storeRepository.ResultManageBookSeriesView = value; }
+        public IDictionary<string, ICommand> Commands => commands;
         public RadioButtonRepository Period { get => storeRepository.Period; }
         public string LoginField 
         {
@@ -142,6 +153,13 @@ namespace BookStore.ViewModels
             await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsSoldBookUsed)));
             await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsPeriodBarUsed)));
             await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsManageAccountsUsed)));
+            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsManageAuthorsUsed)));
+            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsManageGenresUsed)));
+            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsManagePublishersUsed)));
+            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsManageBooksUsed)));
+            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsManageBooksInStoreUsed)));
+            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsManageStocksUsed)));
+            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsManageBookSeriesUsed)));
 
             await OnPropertyChanged(e);
         }
@@ -201,14 +219,14 @@ namespace BookStore.ViewModels
         {
             if (book is not null)
             {
-                await storeRepository.BuyBook(book as BookView);
+                await storeRepository.BuyBook(book as BookViewShow);
             }
         }
         private async Task ReserveBookInStore(object book)
         {
             if (book is not null)
             {
-                newViewFactory.CreateReserveBookView(storeRepository.DbOptions, book as BookView, storeRepository.CurrentUser);
+                newViewFactory.CreateReserveBookView(storeRepository.DbOptions, book as BookViewShow, storeRepository.CurrentUser);
             }
             await OnPropertyChanged(new PropertyChangedEventArgs(nameof(ResultReservedBooksView)));
         }
@@ -217,21 +235,161 @@ namespace BookStore.ViewModels
             IsPeriodBarUsed = Visibility.Collapsed;
             await storeRepository.ManageAccountsView();
         }
+        private async Task ManagedAuthorsAdmin()
+        {
+            IsPeriodBarUsed = Visibility.Collapsed;
+            await storeRepository.ManageAuthorsView();
+        }
+        private async Task ManagedGenresAdmin()
+        {
+            IsPeriodBarUsed = Visibility.Collapsed;
+            await storeRepository.ManageGenresView();
+        }
+        private async Task ManagedPublishersAdmin()
+        {
+            IsPeriodBarUsed = Visibility.Collapsed;
+            await storeRepository.ManagePublishersView();
+        }
+        private async Task ManagedBooksAdmin()
+        {
+            IsPeriodBarUsed = Visibility.Collapsed;
+            await storeRepository.ManageBooksView();
+        }
+        private async Task ManagedBooksInStoreAdmin()
+        {
+            IsPeriodBarUsed = Visibility.Collapsed;
+            await storeRepository.ManageBooksInStoreView();
+        }
+        private async Task ManagedStocksAdmin()
+        {
+            IsPeriodBarUsed = Visibility.Collapsed;
+            await storeRepository.ManageStocksView();
+        }
+        private async Task ManagedBookSeriesAdmin()
+        {
+            IsPeriodBarUsed = Visibility.Collapsed;
+            await storeRepository.ManageBookSeriesView();
+        }
         private async Task CreateAccountInRepository()
         {
             if ((newViewFactory.CreateAccountView(storeRepository.DbOptions)).Value)
                 await ManagedAccountsAdmin();
+        }
+        private async Task CreateAuthorInRepository()
+        {
+            throw new NotImplementedException();
+        }
+        private async Task CreateGenreInRepository()
+        {
+            throw new NotImplementedException();
+        }
+        private async Task CreatePublisherInRepository()
+        {
+            throw new NotImplementedException();
+        }
+        private async Task CreateBookInRepository()
+        {
+            throw new NotImplementedException();
+        }
+        private async Task CreateBookInStoreInRepository()
+        {
+            throw new NotImplementedException();
+        }
+        private async Task CreateStockInRepository()
+        {
+            throw new NotImplementedException();
+        }
+        private async Task CreateBookSeriesInRepository()
+        {
+            throw new NotImplementedException();
         }
         private async Task EditAccountInRepository(object account)
         {
             if ((newViewFactory.CreateAccountView(storeRepository.DbOptions, account as AccountView)).Value)
             await ManagedAccountsAdmin();
         }
+        private async Task EditAuthorInRepository(object author)
+        {
+            throw new NotImplementedException();
+        }
+        private async Task EditGenreInRepository(object genre)
+        {
+            throw new NotImplementedException();
+        }
+        private async Task EditPublisherInRepository(object publisher)
+        {
+            throw new NotImplementedException();
+        }
+        private async Task EditBookInRepository(object book)
+        {
+            throw new NotImplementedException();
+        }
+        private async Task EditBookInStoreInRepository(object bookInStore)
+        {
+            throw new NotImplementedException();
+        }
+        private async Task EditStockInRepository(object stock)
+        {
+            throw new NotImplementedException();
+        }
+        private async Task EditBookSeriesInRepository(object bookSeries)
+        {
+            throw new NotImplementedException();
+        }
         private async Task DeleteAccountInRepository(object account)
         {
             if (account is not null)
             {
                 await storeRepository.DeleteAccount(account as AccountView);
+            }
+        }
+        private async Task DeleteAuthorInRepository(object author)
+        {
+            if (author is not null)
+            {
+                await storeRepository.DeleteAuthor(author as AuthorView);
+            }
+        }
+        private async Task DeleteGenreInRepository(object genre)
+        {
+            if (genre is not null)
+            {
+                await storeRepository.DeleteGenre(genre as GenreView);
+            }
+        }
+        private async Task DeletePublisherInRepository(object publisher)
+        {
+            if (publisher is not null)
+            {
+                await storeRepository.DeletePublisher(publisher as PublisherView);
+            }
+        }
+        private async Task DeleteBookInRepository(object book)
+        {
+            if (book is not null)
+            {
+                await storeRepository.DeleteBook(book as BookView);
+            }
+        }
+        private async Task DeleteBookInStoreInRepository(object bookInStore)
+        {
+            if (bookInStore is not null)
+            {
+                await storeRepository.DeleteBookInStore(bookInStore as BookInStoreView);
+            }
+        }
+        private async Task DeleteStockInRepository(object stock)
+        {
+            if (stock is not null)
+            {
+                await storeRepository.DeleteStock(stock as StockView);
+            }
+        }
+        private async Task DeleteBookSeriesInRepository(object bookSeries)
+        {
+            if (bookSeries is not null)
+            {
+                await storeRepository.DeleteBookSeries(bookSeries as BookSeriesView);
             }
         }
     }
