@@ -32,5 +32,15 @@ namespace BookStore.ViewModels
             };
             return view.ShowDialog();
         }
+        public bool? CreateStockView(DbContextOptions<StoreContext> options, BookStore.Models.StockView stock = null)
+        {
+            StockModel model = new StockModel(options, stock);
+            StockViewModel modelView = new StockViewModel(model, stock is null ? false : true);
+            BookStore.Views.StockView view = new BookStore.Views.StockView()
+            {
+                DataContext = modelView
+            };
+            return view.ShowDialog();
+        }
     }
 }

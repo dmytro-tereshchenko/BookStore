@@ -14,8 +14,8 @@ namespace BookStore.Models
         public string BookInStore { get; set; }
         public string Discount { get; set; }
         [DisplayName("Start date")]
-        public DateTime DateStart { get; set; }
+        public string DateStart { get; set; }
         [DisplayName("Date end")]
-        public DateTime DateEnd { get; set; }
+        public string DateEnd { get; set; }
     }
 }

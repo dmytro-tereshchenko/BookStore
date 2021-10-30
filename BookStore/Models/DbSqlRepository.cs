@@ -622,8 +622,8 @@ namespace BookStore.Models
                                                 Id = stock.Id,
                                                 BookInStore = book.Name,
                                                 Discount = stock.Discount.ToString("#0.00"),
-                                                DateStart = stock.DateStart,
-                                                DateEnd = stock.DateEnd
+                                                DateStart = stock.DateStart.ToShortDateString(),
+                                                DateEnd = stock.DateEnd.ToShortDateString()
                                             }).ToListAsync();
             }
             currentResultView = TypeResultView.ResultManageStocksView;

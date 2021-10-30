@@ -1,8 +1,4 @@
-﻿using BookStore.Interfaces;
-using BookStore.Models;
-using BookStore.Models.Db;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -16,20 +12,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace BookStore.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for StockView.xaml
     /// </summary>
-    internal partial class MainView : Window
+    internal partial class StockView : Window
     {
-        public MainView(IViewModel viewModel)
+        public StockView()
         {
             InitializeComponent();
-            this.DataContext = viewModel;
         }
         private void dg_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
         {
@@ -71,5 +65,4 @@ namespace BookStore.Views
             return null;
         }
     }
-    
 }

@@ -297,7 +297,8 @@ namespace BookStore.ViewModels
         }
         private async Task CreateStockInRepository()
         {
-            throw new NotImplementedException();
+            if ((newViewFactory.CreateStockView(storeRepository.DbOptions)).Value)
+                await ManagedStocksAdmin();
         }
         private async Task CreateBookSeriesInRepository()
         {
@@ -330,7 +331,8 @@ namespace BookStore.ViewModels
         }
         private async Task EditStockInRepository(object stock)
         {
-            throw new NotImplementedException();
+            if ((newViewFactory.CreateStockView(storeRepository.DbOptions, stock as StockView)).Value)
+                await ManagedStocksAdmin();
         }
         private async Task EditBookSeriesInRepository(object bookSeries)
         {
