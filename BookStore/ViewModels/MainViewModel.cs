@@ -27,24 +27,21 @@ namespace BookStore.ViewModels
         private ICommand reservedBooksView;
         private ICommand soldBooksView;
         private ICommand periodChanged;
-        private ICommand search;
+        private ICommand searchView;
         private ICommand buyBook;
         private ICommand reserveBook;
+        private ICommand manageAccountsView;
+        private ICommand newAccount;
+        private ICommand editAccount;
+        private ICommand deleteAccount;
         public MainViewModel(DbSqlRepository storeRepository, NewViewFactory newViewFactory)
         {
             this.storeRepository = storeRepository;
             this.newViewFactory = newViewFactory;
             storeRepository.CurrentUserChanged += OnCurrentUserChanged;
-            storeRepository.ResultBooksViewChanged += OnResultBooksViewChanged;
-            storeRepository.ResultSimpleEntitiesViewChanged += OnResultSimpleEnitiesViewChanged;
-            storeRepository.ResultBooksReservedViewChanged += OnResultReservedBooksViewChanged;
-            storeRepository.ResultBooksSoldViewChanged += OnResultSoldBooksViewChanged;
             storeRepository.MessageChanged += OnMessageChanged;
+            storeRepository.ResultViewChanged += OnResultViewChanged;
             IsPeriodBarUsed = Visibility.Collapsed;
-            IsResultBooksUsed = Visibility.Visible;
-            IsSimpleEntitiesUsed = Visibility.Collapsed;
-            IsReservedBookUsed = Visibility.Collapsed;
-            IsSoldBookUsed = Visibility.Collapsed;
             login = new DialogCommand(LoginUser); ;
             logout = new DelegateCommand(LogoutUser);
             periodChanged = new DelegateCommand(PeriodChange);
@@ -55,22 +52,39 @@ namespace BookStore.ViewModels
             mostPopularGenresView = new DelegateCommand(ShowMostPopularGenres);
             reservedBooksView = new DelegateCommand(ShowReservedBooks);
             soldBooksView = new DelegateCommand(ShowSoldBooks);
-            search = new DelegateCommand(SearchBook);
+            searchView = new DelegateCommand(SearchBook);
             buyBook = new DialogCommand(BuyBookFromStore, () => IsResultBooksUsed == Visibility.Visible);
             reserveBook = new DialogCommand(ReserveBookInStore, () => IsResultBooksUsed == Visibility.Visible);
+            manageAccountsView = new DelegateCommand(ManagedAccountsAdmin);
+            newAccount = new DelegateCommand(CreateAccountInRepository);
+            editAccount = new DialogCommand(EditAccountInRepository);
+            deleteAccount = new DialogCommand(DeleteAccountInRepository);
         }
-        public Visibility IsAdmin { get => (storeRepository?.CurrentUser?.Admin ?? false) == true ? Visibility.Visible : Visibility.Collapsed; }
+        /*public Visibility IsAdmin { get => (storeRepository?.CurrentUser?.Admin ?? false) == true ? Visibility.Visible : Visibility.Collapsed; }*/
+        public Visibility IsAdmin { get => Visibility.Visible; }
         public Visibility IsLogIn { get => storeRepository?.CurrentUser != null ? Visibility.Visible : Visibility.Collapsed; }
         public Visibility IsLogOut { get => IsLogIn == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed; }
         public Visibility IsPeriodBarUsed { get; set; }
-        public Visibility IsResultBooksUsed { get; set; }
-        public Visibility IsSimpleEntitiesUsed { get; set; }
-        public Visibility IsReservedBookUsed { get; set; }
-        public Visibility IsSoldBookUsed { get; set; }
-        public IEnumerable<BookView> ResultBooksView { get => storeRepository.ResultBooks; set => storeRepository.ResultBooks = value; }
-        public IEnumerable<SimpleEntityView> ResultSimpleEnitiesView { get => storeRepository.ResultSimpleEntities; set => storeRepository.ResultSimpleEntities = value; }
-        public IEnumerable<BookReservedView> ResultReservedBooksView { get => storeRepository.ResultBooksReserved; set => storeRepository.ResultBooksReserved = value; }
-        public IEnumerable<BookSoldView> ResultSoldBooksView { get => storeRepository.ResultBooksSold; set => storeRepository.ResultBooksSold = value; }
+        public Visibility IsResultBooksUsed
+        {
+            get => storeRepository.TypeResultView == TypeResultView.AllBooksView ||
+                storeRepository.TypeResultView == TypeResultView.NewBooksView ||
+                storeRepository.TypeResultView == TypeResultView.BestSellingBooksView ||
+                storeRepository.TypeResultView == TypeResultView.ResultSearchView ? Visibility.Visible : Visibility.Collapsed;
+        }
+        public Visibility IsSimpleEntitiesUsed
+        {
+            get => storeRepository.TypeResultView == TypeResultView.MostPopularAuthorsView ||
+                storeRepository.TypeResultView == TypeResultView.MostPopularGenresView ? Visibility.Visible : Visibility.Collapsed;
+        }
+        public Visibility IsReservedBookUsed { get=> storeRepository.TypeResultView == TypeResultView.ReservedBooksView ? Visibility.Visible : Visibility.Collapsed; }
+        public Visibility IsSoldBookUsed { get => storeRepository.TypeResultView == TypeResultView.SoldBooksView ? Visibility.Visible : Visibility.Collapsed; }
+        public Visibility IsManageAccountsUsed { get => storeRepository.TypeResultView == TypeResultView.ResultManageAccountsView ? Visibility.Visible : Visibility.Collapsed; }
+        public IEnumerable<BookView> ResultBooksView { get => storeRepository.ResultBooksView; set => storeRepository.ResultBooksView = value; }
+        public IEnumerable<SimpleEntityView> ResultSimpleEnitiesView { get => storeRepository.ResultSimpleEnitiesView; set => storeRepository.ResultSimpleEnitiesView = value; }
+        public IEnumerable<BookReservedView> ResultReservedBooksView { get => storeRepository.ResultReservedBooksView; set => storeRepository.ResultReservedBooksView = value; }
+        public IEnumerable<BookSoldView> ResultSoldBooksView { get => storeRepository.ResultSoldBooksView; set => storeRepository.ResultSoldBooksView = value; }
+        public IEnumerable<AccountView> ResultManageAccountsView { get => storeRepository.ResultManageAccountsView; set => storeRepository.ResultManageAccountsView = value; }
         public ICommand Login => login;
         public ICommand Logout => logout;
         public ICommand PeriodChanged => periodChanged;
@@ -81,9 +95,13 @@ namespace BookStore.ViewModels
         public ICommand MostPopularGenresView => mostPopularGenresView;
         public ICommand ReservedBooksView => reservedBooksView;
         public ICommand SoldBooksView => soldBooksView;
-        public ICommand Search => search;
+        public ICommand SearchView => searchView;
         public ICommand BuyBook => buyBook;
         public ICommand ReserveBook => reserveBook;
+        public ICommand ManageAccountsView => manageAccountsView;
+        public ICommand NewAccount => newAccount;
+        public ICommand EditAccount => editAccount;
+        public ICommand DeleteAccount => deleteAccount;
         public RadioButtonRepository Period { get => storeRepository.Period; }
         public string LoginField 
         {
@@ -115,61 +133,17 @@ namespace BookStore.ViewModels
             await OnPropertyChanged(new PropertyChangedEventArgs(nameof(LoginText)));
             await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsPeriodBarUsed)));
         }
-        private async void OnResultBooksViewChanged(object sender, EventArgs e)
+        private async void OnResultViewChanged(object sender, PropertyChangedEventArgs e)
         {
-            IsSimpleEntitiesUsed = Visibility.Collapsed;
-            IsReservedBookUsed = Visibility.Collapsed;
-            IsSoldBookUsed = Visibility.Collapsed;
-            IsResultBooksUsed = Visibility.Visible;
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(ResultBooksView)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(TableName)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsSimpleEntitiesUsed)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsReservedBookUsed)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsSoldBookUsed)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsResultBooksUsed)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsPeriodBarUsed)));
-        }
-        private async void OnResultSimpleEnitiesViewChanged(object sender, EventArgs e)
-        {
-            IsResultBooksUsed = Visibility.Collapsed;
-            IsReservedBookUsed = Visibility.Collapsed;
-            IsSoldBookUsed = Visibility.Collapsed;
-            IsSimpleEntitiesUsed = Visibility.Visible;
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(ResultSimpleEnitiesView)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(TableName)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsResultBooksUsed)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsReservedBookUsed)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsSoldBookUsed)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsSimpleEntitiesUsed)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsPeriodBarUsed)));
-        }
-        private async void OnResultReservedBooksViewChanged(object sender, EventArgs e)
-        {
-            IsResultBooksUsed = Visibility.Collapsed;
-            IsSimpleEntitiesUsed = Visibility.Collapsed;
-            IsSoldBookUsed = Visibility.Collapsed;
-            IsReservedBookUsed = Visibility.Visible;
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(ResultReservedBooksView)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(TableName)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsResultBooksUsed)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsSimpleEntitiesUsed)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsSoldBookUsed)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsReservedBookUsed)));
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsPeriodBarUsed)));
-        }
-        private async void OnResultSoldBooksViewChanged(object sender, EventArgs e)
-        {
-            IsResultBooksUsed = Visibility.Collapsed;
-            IsSimpleEntitiesUsed = Visibility.Collapsed;
-            IsReservedBookUsed = Visibility.Collapsed;
-            IsSoldBookUsed = Visibility.Visible;
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(ResultSoldBooksView)));
             await OnPropertyChanged(new PropertyChangedEventArgs(nameof(TableName)));
             await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsResultBooksUsed)));
             await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsSimpleEntitiesUsed)));
             await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsReservedBookUsed)));
             await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsSoldBookUsed)));
             await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsPeriodBarUsed)));
+            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsManageAccountsUsed)));
+
+            await OnPropertyChanged(e);
         }
         private async void OnMessageChanged(object sender, EventArgs e)
         {
@@ -207,27 +181,27 @@ namespace BookStore.ViewModels
         private async Task ShowMostPopularGenres()
         {
             IsPeriodBarUsed = Visibility.Visible;
-            await storeRepository .MostPopularGenresView();
+            await storeRepository.MostPopularGenresView();
         }
         private async Task ShowReservedBooks()
         {
             IsPeriodBarUsed = Visibility.Collapsed;
-            await storeRepository .ReservedBooksView();
+            await storeRepository.ReservedBooksView();
         }
         private async Task ShowSoldBooks()
         {
             IsPeriodBarUsed = Visibility.Collapsed;
-            await storeRepository .SoldBooksView();
+            await storeRepository.SoldBooksView();
         }
         private async Task SearchBook()
         {
-            await storeRepository .SearchBook();
+            await storeRepository.SearchBook();
         }
         private async Task BuyBookFromStore(object book)
         {
             if (book is not null)
             {
-                await storeRepository .BuyBook(book as BookView);
+                await storeRepository.BuyBook(book as BookView);
             }
         }
         private async Task ReserveBookInStore(object book)
@@ -236,7 +210,29 @@ namespace BookStore.ViewModels
             {
                 newViewFactory.CreateReserveBookView(storeRepository.DbOptions, book as BookView, storeRepository.CurrentUser);
             }
-            await Task.CompletedTask;
+            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(ResultReservedBooksView)));
+        }
+        private async Task ManagedAccountsAdmin()
+        {
+            IsPeriodBarUsed = Visibility.Collapsed;
+            await storeRepository.ManageAccountsView();
+        }
+        private async Task CreateAccountInRepository()
+        {
+            if ((newViewFactory.CreateAccountView(storeRepository.DbOptions)).Value)
+                await ManagedAccountsAdmin();
+        }
+        private async Task EditAccountInRepository(object account)
+        {
+            if ((newViewFactory.CreateAccountView(storeRepository.DbOptions, account as AccountView)).Value)
+            await ManagedAccountsAdmin();
+        }
+        private async Task DeleteAccountInRepository(object account)
+        {
+            if (account is not null)
+            {
+                await storeRepository.DeleteAccount(account as AccountView);
+            }
         }
     }
 }

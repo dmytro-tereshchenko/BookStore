@@ -54,6 +54,10 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Background" Value="Azure"/>
     </Style>
+    <Style x:Key="TextBlockEditable" BasedOn="{StaticResource TextBlockView}" TargetType="{x:Type TextBox}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Background" Value="Azure"/>
+    </Style>
     <Style x:Key="TextBoxDialog" BasedOn="{StaticResource TextBlockView}" TargetType="{x:Type TextBox}">
         <Setter Property="Background" Value="Azure"/>
     </Style>
@@ -63,6 +67,16 @@
     </Style>
     <Style x:Key="LabelToTextBoxDialog" BasedOn="{StaticResource TextBlockView}" TargetType="{x:Type Label}">
         <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+    <Style x:Key="CheckBoxDialog" BasedOn="{StaticResource TextBlockView}" TargetType="{x:Type CheckBox}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Background" Value="Azure"/>
+        <Setter Property="Margin" Value="20 3"/>
+        <Setter Property="LayoutTransform">
+            <Setter.Value>
+                <ScaleTransform ScaleX="2" ScaleY="2" />
+            </Setter.Value>
+        </Setter>
     </Style>
     <Style x:Key="TopBarLabel" TargetType="{x:Type Label}">
         <Setter Property="VerticalAlignment" Value="Center"/>

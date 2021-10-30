@@ -24,5 +24,10 @@ namespace BookStore.Infrastructure
             return func == null ? Task.CompletedTask
                 : Task.WhenAll(func.GetInvocationList().Cast<PropertyChangedEventHandler>().Select((f) => Task.Run(() => f.DynamicInvoke(sender, e))));
         }
+        public static Task InvokeAsync<TArgs>(this EventHandler<PropertyChangedEventArgs> func, object sender, TArgs e)
+        {
+            return func == null ? Task.CompletedTask
+                : Task.WhenAll(func.GetInvocationList().Cast<EventHandler<PropertyChangedEventArgs>>().Select((f) => Task.Run(() => f.DynamicInvoke(sender, e))));
+        }
     }
 }

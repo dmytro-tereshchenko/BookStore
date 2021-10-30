@@ -18,7 +18,7 @@
             <Label Target="{Binding ElementName=passwordUser}" Visibility="{Binding IsLogOut}" Style="{StaticResource TopBarLabel}">Password</Label>
             <PasswordBox x:Name="passwordUser" Visibility="{Binding IsLogOut}"/>
             <Button Visibility="{Binding IsLogOut}" Command="{Binding Login}" CommandParameter="{Binding ElementName=passwordUser}" Style="{StaticResource TopBarButtons}">Login</Button>
-            <Button DockPanel.Dock="Right" Command="{Binding Search}" Style="{StaticResource TopBarButtons}">Search</Button>
+            <Button DockPanel.Dock="Right" Command="{Binding SearchView}" Style="{StaticResource TopBarButtons}">Search</Button>
             <TextBox DockPanel.Dock="Right" x:Name="genreSearch" Style="{StaticResource SearchTextBox}" Text="{Binding GenreSearch}"/>
             <Label DockPanel.Dock="Right" Target="{Binding ElementName=genreSearch}" Style="{StaticResource TopBarLabel}">Genre</Label>
             <TextBox DockPanel.Dock="Right" x:Name="authorSearch" Style="{StaticResource SearchTextBox}" Text="{Binding AuthorSearch}"/>
@@ -55,7 +55,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button Style="{DynamicResource RightTriangleButtonStyle}">Manage accounts</Button>
+            <Button Style="{DynamicResource RightTriangleButtonStyle}" Command="{Binding ManageAccountsView}">Manage accounts</Button>
             <Button Grid.Row="1" Style="{DynamicResource RightTriangleButtonStyle}">Manage authors</Button>
             <Button Grid.Row="2" Style="{DynamicResource RightTriangleButtonStyle}">Manage genres</Button>
             <Button Grid.Row="3" Style="{DynamicResource RightTriangleButtonStyle}">Manage publishers</Button>
@@ -83,24 +83,45 @@
             <Button Command="{Binding ReserveBook}" CommandParameter="{Binding SelectedItem, ElementName=resultBooksView}" Style="{StaticResource TopBarButtons}">Reserve</Button>
             <Button Command="{Binding BuyBook}" CommandParameter="{Binding SelectedItem, ElementName=resultBooksView}" Style="{StaticResource TopBarButtons}">Buy</Button>
         </UniformGrid>
-        <Grid>
-            <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
+        <Border BorderThickness="2" BorderBrush="#FF6468B2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
                   ItemsSource="{Binding ResultSimpleEnitiesView}"
                   Visibility="{Binding IsSimpleEntitiesUsed}">
-            </DataGrid>
-            <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
+                </DataGrid>
+                <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
                   ItemsSource="{Binding ResultReservedBooksView}"
                   Visibility="{Binding IsReservedBookUsed}">
-            </DataGrid>
-            <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
+                </DataGrid>
+                <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
                   ItemsSource="{Binding ResultSoldBooksView}"
                   Visibility="{Binding IsSoldBookUsed}">
-            </DataGrid>
-            <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
+                </DataGrid>
+                <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
                   ItemsSource="{Binding ResultBooksView}"
                   Visibility="{Binding IsResultBooksUsed}"
                   x:Name="resultBooksView">
-            </DataGrid>
-        </Grid>
+                </DataGrid>
+                <Grid Visibility="{Binding IsManageAccountsUsed}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid AutoGeneratingColumn="dg_AutoGeneratingColumn"
+                  ItemsSource="{Binding ResultManageAccountsView}"
+                  x:Name="manageAccountsView">
+                    </DataGrid>
+                    <UniformGrid Grid.Column="1" Rows="3">
+                        <Button Command="{Binding NewAccount}" Style="{StaticResource TopBarButtons}">New</Button>
+                        <Button Command="{Binding EditAccount}" CommandParameter="{Binding SelectedItem, ElementName=manageAccountsView}" Style="{StaticResource TopBarButtons}">Edit</Button>
+                        <Button Command="{Binding DeleteAccount}" CommandParameter="{Binding SelectedItem, ElementName=manageAccountsView}" Style="{StaticResource TopBarButtons}">Delete</Button>
+                    </UniformGrid>
+                </Grid>
+            </Grid>
+        </Border>
     </DockPanel>
 </Window>

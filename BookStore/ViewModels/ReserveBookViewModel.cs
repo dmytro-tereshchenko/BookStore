@@ -10,12 +10,12 @@ using System.Windows.Input;
 
 namespace BookStore.ViewModels
 {
-    internal class ReserveBookModelView : ViewModel
+    internal class ReserveBookViewModel : ViewModel
     {
         private ReserveBookModel model;
         private ICommand ok;
         private ICommand cancel;
-        public ReserveBookModelView(ReserveBookModel model)
+        public ReserveBookViewModel(ReserveBookModel model)
         {
             this.model = model;
             ok = new DialogCommand(ReserveBook);

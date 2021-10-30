@@ -25,6 +25,7 @@ namespace BookStore.Models
         private IEnumerable<SimpleEntityView> resultSimpleEntities;
         private IEnumerable<BookReservedView> resultBooksReserved;
         private IEnumerable<BookSoldView> resultBooksSold;
+        private IEnumerable<AccountView> resultManageAccounts;
         public DbSqlRepository(DbContextOptions<StoreContext> options, string[] keysRadioButton)
         {
             this.options = options;
@@ -41,6 +42,7 @@ namespace BookStore.Models
         public string AuthorSearch { get => authorSearch; set => authorSearch = value; }
         public string GenreSearch { get => genreSearch; set => genreSearch = value; }
         public string Message { get; set; }
+        public TypeResultView TypeResultView { get => currentResultView; }
         public string TableName
         {
             get => currentResultView switch
@@ -53,27 +55,23 @@ namespace BookStore.Models
                 TypeResultView.ReservedBooksView => "Reserved books",
                 TypeResultView.SoldBooksView => "Sold books",
                 TypeResultView.ResultSearchView => "Search results",
+                TypeResultView.ResultManageAccountsView => "Accounts",
                 _ => throw new NotImplementedException()
             };
         }
-        public IEnumerable<BookView> ResultBooks { get => resultBooks; set => resultBooks = value; }
-        public IEnumerable<SimpleEntityView> ResultSimpleEntities { get => resultSimpleEntities; set => resultSimpleEntities = value; }
-        public IEnumerable<BookReservedView> ResultBooksReserved { get => resultBooksReserved; set => resultBooksReserved = value; }
-        public IEnumerable<BookSoldView> ResultBooksSold { get => resultBooksSold; set => resultBooksSold = value; }
+        public IEnumerable<BookView> ResultBooksView { get => resultBooks; set => resultBooks = value; }
+        public IEnumerable<SimpleEntityView> ResultSimpleEnitiesView { get => resultSimpleEntities; set => resultSimpleEntities = value; }
+        public IEnumerable<BookReservedView> ResultReservedBooksView { get => resultBooksReserved; set => resultBooksReserved = value; }
+        public IEnumerable<BookSoldView> ResultSoldBooksView { get => resultBooksSold; set => resultBooksSold = value; }
+        public IEnumerable<AccountView> ResultManageAccountsView { get => resultManageAccounts; set => resultManageAccounts = value; }
 
         public event EventHandler<EventArgs> CurrentUserChanged;
-        public event EventHandler<EventArgs> ResultBooksViewChanged;
-        public event EventHandler<EventArgs> ResultSimpleEntitiesViewChanged;
-        public event EventHandler<EventArgs> ResultBooksReservedViewChanged;
-        public event EventHandler<EventArgs> ResultBooksSoldViewChanged;
         public event EventHandler<EventArgs> MessageChanged;
+        public event EventHandler<PropertyChangedEventArgs> ResultViewChanged;
 
         private async Task OnCurrentUserChanged(EventArgs e) => await CurrentUserChanged?.InvokeAsync(this, e);
-        private async Task OnResultBooksViewChanged(EventArgs e) => await ResultBooksViewChanged?.InvokeAsync(this, e);
-        private async Task OnResultSimpleEntitiesViewChanged(EventArgs e) => await ResultSimpleEntitiesViewChanged?.InvokeAsync(this, e);
-        private async Task OnResultBooksReservedViewChanged(EventArgs e) => await ResultBooksReservedViewChanged?.InvokeAsync(this, e);
-        private async Task OnResultBooksSoldViewChanged(EventArgs e) => await ResultBooksSoldViewChanged?.InvokeAsync(this, e);
         private async Task OnMessageChanged(EventArgs e) => await MessageChanged?.InvokeAsync(this, e);
+        private async Task OnResultViewChanged(PropertyChangedEventArgs e) => await ResultViewChanged?.InvokeAsync(this, e);
 
         public async Task UserLogIn(string password)
         {
@@ -138,7 +136,7 @@ namespace BookStore.Models
             }
             currentResultView = TypeResultView.ResultSearchView;
             ClearViews();
-            await OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
+            await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultBooksView)));
         }
         public async Task UserLogout()
         {
@@ -208,7 +206,7 @@ namespace BookStore.Models
             }
             currentResultView = TypeResultView.AllBooksView;
             ClearViews();
-            await OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
+            await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultBooksView)));
         }
         public async Task NewBooksView()
         {
@@ -254,7 +252,7 @@ namespace BookStore.Models
             }
             currentResultView = TypeResultView.NewBooksView;
             ClearViews();
-            await OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
+            await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultBooksView)));
         }
         public async Task BestSellingBooksView()
         {
@@ -333,7 +331,7 @@ namespace BookStore.Models
             }
             currentResultView = TypeResultView.BestSellingBooksView;
             ClearViews();
-            await OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
+            await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultBooksView)));
         }
         public async Task MostPopularAuthorsView()
         {
@@ -365,7 +363,7 @@ namespace BookStore.Models
             }
             currentResultView = TypeResultView.MostPopularAuthorsView;
             ClearViews();
-            await OnResultSimpleEntitiesViewChanged(new PropertyChangedEventArgs(nameof(ResultSimpleEntities)));
+            await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultSimpleEnitiesView)));
         }
         public async Task MostPopularGenresView()
         {
@@ -394,7 +392,7 @@ namespace BookStore.Models
             }
             currentResultView = TypeResultView.MostPopularGenresView;
             ClearViews();
-            await OnResultSimpleEntitiesViewChanged(new PropertyChangedEventArgs(nameof(ResultSimpleEntities)));
+            await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultSimpleEnitiesView)));
         }
         public async Task ReservedBooksView()
         {
@@ -432,7 +430,7 @@ namespace BookStore.Models
             }
             currentResultView = TypeResultView.ReservedBooksView;
             ClearViews();
-            await OnResultBooksReservedViewChanged(new PropertyChangedEventArgs(nameof(ResultBooksReserved)));
+            await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultReservedBooksView)));
         }
         public async Task SoldBooksView()
         {
@@ -465,7 +463,25 @@ namespace BookStore.Models
             }
             currentResultView = TypeResultView.SoldBooksView;
             ClearViews();
-            await OnResultBooksSoldViewChanged(new PropertyChangedEventArgs(nameof(ResultBooksSold)));
+            await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultSoldBooksView)));
+        }
+        public async Task ManageAccountsView()
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                resultManageAccounts = await (from account in db.Accounts
+                                              select new AccountView
+                                              {
+                                                  Id = account.Id,
+                                                  Login = account.Login,
+                                                  Password = new String('*', account.Password.Length),
+                                                  IsAdmin = account.Admin
+                                              })
+                                   .ToListAsync();
+            }
+            currentResultView = TypeResultView.ResultManageAccountsView;
+            ClearViews();
+            await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultManageAccountsView)));
         }
         public async Task BuyBook(BookView buyBook)
         {
@@ -491,6 +507,24 @@ namespace BookStore.Models
             Message = "Book bought";
             await OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
         }
+        public async Task DeleteAccount(AccountView account)
+        {
+            using (StoreContext db = new StoreContext(options))
+            {
+                Account accountInDb = await db.Accounts.FindAsync(account.Id);
+                if (accountInDb is null)
+                {
+                    Message = "Not found account";
+                    await OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
+                    return;
+                }
+                db.Accounts.Remove(accountInDb);
+                await db.SaveChangesAsync();
+                
+            }
+            Message = "Account Removed";
+            await ManageAccountsView();
+        }
         private void ClearViews()
         {
             if (currentResultView != TypeResultView.AllBooksView &&
@@ -512,6 +546,10 @@ namespace BookStore.Models
             if (currentResultView != TypeResultView.SoldBooksView)
             {
                 resultBooksSold = null;
+            }
+            if (currentResultView != TypeResultView.ResultManageAccountsView)
+            {
+                resultManageAccounts = null;
             }
         }
         private int GetDays() 
