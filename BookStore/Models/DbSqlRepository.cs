@@ -68,12 +68,12 @@ namespace BookStore.Models
         public event EventHandler<EventArgs> ResultBooksSoldViewChanged;
         public event EventHandler<EventArgs> MessageChanged;
 
-        private async void OnCurrentUserChanged(EventArgs e) => await CurrentUserChanged?.InvokeAsync(this, e);
-        private async void OnResultBooksViewChanged(EventArgs e) => await ResultBooksViewChanged?.InvokeAsync(this, e);
-        private async void OnResultSimpleEntitiesViewChanged(EventArgs e) => await ResultSimpleEntitiesViewChanged?.InvokeAsync(this, e);
-        private async void OnResultBooksReservedViewChanged(EventArgs e) => await ResultBooksReservedViewChanged?.InvokeAsync(this, e);
-        private async void OnResultBooksSoldViewChanged(EventArgs e) => await ResultBooksSoldViewChanged?.InvokeAsync(this, e);
-        private async void OnMessageChanged(EventArgs e) => await MessageChanged?.InvokeAsync(this, e);
+        private async Task OnCurrentUserChanged(EventArgs e) => await CurrentUserChanged?.InvokeAsync(this, e);
+        private async Task OnResultBooksViewChanged(EventArgs e) => await ResultBooksViewChanged?.InvokeAsync(this, e);
+        private async Task OnResultSimpleEntitiesViewChanged(EventArgs e) => await ResultSimpleEntitiesViewChanged?.InvokeAsync(this, e);
+        private async Task OnResultBooksReservedViewChanged(EventArgs e) => await ResultBooksReservedViewChanged?.InvokeAsync(this, e);
+        private async Task OnResultBooksSoldViewChanged(EventArgs e) => await ResultBooksSoldViewChanged?.InvokeAsync(this, e);
+        private async Task OnMessageChanged(EventArgs e) => await MessageChanged?.InvokeAsync(this, e);
 
         public async Task UserLogIn(string password)
         {
@@ -83,12 +83,12 @@ namespace BookStore.Models
             }
             if (currentUser != null)
             {
-                OnCurrentUserChanged(new PropertyChangedEventArgs(nameof(CurrentUser)));
+                await OnCurrentUserChanged(new PropertyChangedEventArgs(nameof(CurrentUser)));
             }
             else
             {
                 Message = "Wrong login or password";
-                OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
+                await OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
             }
         }
         public async Task SearchBook()
@@ -138,13 +138,12 @@ namespace BookStore.Models
             }
             currentResultView = TypeResultView.ResultSearchView;
             ClearViews();
-            OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
+            await OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
         }
-        public Task UserLogout()
+        public async Task UserLogout()
         {
             currentUser = null;
-            OnCurrentUserChanged(new PropertyChangedEventArgs(nameof(CurrentUser)));
-            return Task.CompletedTask;
+            await OnCurrentUserChanged(new PropertyChangedEventArgs(nameof(CurrentUser)));
         }
         public async Task PeriodChanged()
         {
@@ -209,7 +208,7 @@ namespace BookStore.Models
             }
             currentResultView = TypeResultView.AllBooksView;
             ClearViews();
-            OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
+            await OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
         }
         public async Task NewBooksView()
         {
@@ -255,7 +254,7 @@ namespace BookStore.Models
             }
             currentResultView = TypeResultView.NewBooksView;
             ClearViews();
-            OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
+            await OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
         }
         public async Task BestSellingBooksView()
         {
@@ -334,7 +333,7 @@ namespace BookStore.Models
             }
             currentResultView = TypeResultView.BestSellingBooksView;
             ClearViews();
-            OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
+            await OnResultBooksViewChanged(new PropertyChangedEventArgs(nameof(ResultBooks)));
         }
         public async Task MostPopularAuthorsView()
         {
@@ -366,7 +365,7 @@ namespace BookStore.Models
             }
             currentResultView = TypeResultView.MostPopularAuthorsView;
             ClearViews();
-            OnResultSimpleEntitiesViewChanged(new PropertyChangedEventArgs(nameof(ResultSimpleEntities)));
+            await OnResultSimpleEntitiesViewChanged(new PropertyChangedEventArgs(nameof(ResultSimpleEntities)));
         }
         public async Task MostPopularGenresView()
         {
@@ -395,7 +394,7 @@ namespace BookStore.Models
             }
             currentResultView = TypeResultView.MostPopularGenresView;
             ClearViews();
-            OnResultSimpleEntitiesViewChanged(new PropertyChangedEventArgs(nameof(ResultSimpleEntities)));
+            await OnResultSimpleEntitiesViewChanged(new PropertyChangedEventArgs(nameof(ResultSimpleEntities)));
         }
         public async Task ReservedBooksView()
         {
@@ -433,7 +432,7 @@ namespace BookStore.Models
             }
             currentResultView = TypeResultView.ReservedBooksView;
             ClearViews();
-            OnResultBooksReservedViewChanged(new PropertyChangedEventArgs(nameof(ResultBooksReserved)));
+            await OnResultBooksReservedViewChanged(new PropertyChangedEventArgs(nameof(ResultBooksReserved)));
         }
         public async Task SoldBooksView()
         {
@@ -466,7 +465,7 @@ namespace BookStore.Models
             }
             currentResultView = TypeResultView.SoldBooksView;
             ClearViews();
-            OnResultBooksSoldViewChanged(new PropertyChangedEventArgs(nameof(ResultBooksSold)));
+            await OnResultBooksSoldViewChanged(new PropertyChangedEventArgs(nameof(ResultBooksSold)));
         }
         public async Task BuyBook(BookView buyBook)
         {
@@ -476,7 +475,7 @@ namespace BookStore.Models
                 if (book is null || book.Amount < 1)
                 {
                     Message = "Not found book or not free to sale";
-                    OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
+                    await OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
                     return;
                 }
                 book.Amount -= 1;
@@ -490,7 +489,7 @@ namespace BookStore.Models
                 await db.SaveChangesAsync();
             }
             Message = "Book bought";
-            OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
+            await OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
         }
         private void ClearViews()
         {

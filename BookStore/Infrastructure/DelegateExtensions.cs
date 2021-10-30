@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,11 @@ namespace BookStore.Infrastructure
         {
             return func == null ? Task.CompletedTask
                 : Task.WhenAll(func.GetInvocationList().Cast<EventHandler>().Select((f) => Task.Run(() => f.DynamicInvoke(sender, e))));
+        }
+        public static Task InvokeAsync(this PropertyChangedEventHandler func, object sender, PropertyChangedEventArgs e)
+        {
+            return func == null ? Task.CompletedTask
+                : Task.WhenAll(func.GetInvocationList().Cast<PropertyChangedEventHandler>().Select((f) => Task.Run(() => f.DynamicInvoke(sender, e))));
         }
     }
 }
