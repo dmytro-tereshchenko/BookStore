@@ -224,14 +224,14 @@
             <EventTrigger RoutedEvent="Mouse.MouseEnter">
                 <BeginStoryboard>
                     <Storyboard TargetProperty="Opacity">
-                        <DoubleAnimation From="1" To="0.5" Duration="0:0:1" />
+                        <DoubleAnimation From="0.6" To="1" Duration="0:0:1" />
                     </Storyboard>
                 </BeginStoryboard>
             </EventTrigger>
             <EventTrigger RoutedEvent="Mouse.MouseLeave">
                 <BeginStoryboard>
                     <Storyboard TargetProperty="Opacity">
-                        <DoubleAnimation From="0.5" To="1" Duration="0:0:1" />
+                        <DoubleAnimation From="1" To="0.6" Duration="0:0:1" />
                     </Storyboard>
                 </BeginStoryboard>
             </EventTrigger>
@@ -267,14 +267,14 @@
             <EventTrigger RoutedEvent="Mouse.MouseEnter">
                 <BeginStoryboard>
                     <Storyboard TargetProperty="Opacity">
-                        <DoubleAnimation From="1" To="0.5" Duration="0:0:1" />
+                        <DoubleAnimation From="0.6" To="1" Duration="0:0:1" />
                     </Storyboard>
                 </BeginStoryboard>
             </EventTrigger>
             <EventTrigger RoutedEvent="Mouse.MouseLeave">
                 <BeginStoryboard>
                     <Storyboard TargetProperty="Opacity">
-                        <DoubleAnimation From="0.5" To="1" Duration="0:0:1" />
+                        <DoubleAnimation From="1" To="0.6" Duration="0:0:1" />
                     </Storyboard>
                 </BeginStoryboard>
             </EventTrigger>
@@ -286,6 +286,7 @@
         <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
         <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
         <Setter Property="Template" Value="{StaticResource LeftButtonTemplate}"/>
+        <Setter Property="Opacity" Value="0.6"/>
     </Style>
 
     <Style x:Key="RightTriangleButtonStyle" TargetType="{x:Type Button}">
@@ -293,6 +294,7 @@
         <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
         <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
         <Setter Property="Template" Value="{StaticResource RightButtonTemplate}"/>
+        <Setter Property="Opacity" Value="0.6"/>
     </Style>
 
     <TranslateTransform x:Key="TranslateRight" X="35" Y="0" />
