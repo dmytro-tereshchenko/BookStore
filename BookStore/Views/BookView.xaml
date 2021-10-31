@@ -55,9 +55,8 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Label Grid.Row="0" Style="{StaticResource LabelToTextBlockDialog}">Authors</Label>
-                    <DataGrid Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" 
-                      Style="{StaticResource DataGridDialog}"
-                      AutoGeneratingColumn="dg_AutoGeneratingColumn"
+                    <ListView Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" 
+                      Style="{StaticResource ListViewDialog}"
                       ItemsSource="{Binding ResultAuthors}"
                       x:Name="resultAuthors"/>
                     <Button Grid.Row="1" Command="{Binding Commands[SearchAuthorsInStore]}" Style="{StaticResource DialogButtons}">Search</Button>
