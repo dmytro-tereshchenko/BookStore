@@ -1,6 +1,7 @@
 ﻿using BookStore.Infrastructure;
 using BookStore.Interfaces;
 using BookStore.Models;
+using BookStore.Models.Db;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,10 +16,10 @@ namespace BookStore.ViewModels
 {
     internal class MainViewModel : ViewModel
     {
-        private DbSqlRepository storeRepository;
-        private NewViewFactory newViewFactory;
+        private IDbRepository<StoreContext> storeRepository;
+        private INewViewFactory<StoreContext> newViewFactory;
         private IDictionary<string, ICommand> commands;
-        public MainViewModel(DbSqlRepository storeRepository, NewViewFactory newViewFactory)
+        public MainViewModel(IDbRepository<StoreContext> storeRepository, INewViewFactory<StoreContext> newViewFactory)
         {
             this.storeRepository = storeRepository;
             this.newViewFactory = newViewFactory;

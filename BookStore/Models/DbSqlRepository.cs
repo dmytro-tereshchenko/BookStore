@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookStore.Models
 {
-    internal class DbSqlRepository
+    internal class DbSqlRepository: IDbRepository<StoreContext>
     {
         private DbContextOptions<StoreContext> options;
         private RadioButtonRepository period;

@@ -1,4 +1,5 @@
-﻿using BookStore.Models;
+﻿using BookStore.Interfaces;
+using BookStore.Models;
 using BookStore.Models.Db;
 using BookStore.Views;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookStore.ViewModels
 {
-    internal class NewViewFactory
+    internal class NewViewFactory: INewViewFactory<StoreContext>
     {
         public void CreateReserveBookView(DbContextOptions<StoreContext> options, BookViewShow book, Account account = null)
         {
