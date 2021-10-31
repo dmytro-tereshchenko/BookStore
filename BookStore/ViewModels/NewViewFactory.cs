@@ -42,5 +42,15 @@ namespace BookStore.ViewModels
             };
             return view.ShowDialog();
         }
+        public bool? CreateBookView(DbContextOptions<StoreContext> options, BookStore.Models.BookView book = null)
+        {
+            BookModel model = new BookModel(options, book);
+            BookViewModel modelView = new BookViewModel(model, book is null ? false : true);
+            BookStore.Views.BookView view = new BookStore.Views.BookView()
+            {
+                DataContext = modelView
+            };
+            return view.ShowDialog();
+        }
     }
 }

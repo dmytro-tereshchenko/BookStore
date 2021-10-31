@@ -73,8 +73,8 @@ namespace BookStore.ViewModels
             commands.Add("DeleteStock", new DialogCommand(DeleteStockInRepository));
             commands.Add("DeleteBookSeries", new DialogCommand(DeleteBookSeriesInRepository));
         }
-        /*public Visibility IsAdmin { get => (storeRepository?.CurrentUser?.Admin ?? false) == true ? Visibility.Visible : Visibility.Collapsed; }*/
-        public Visibility IsAdmin { get => Visibility.Visible; }
+        public Visibility IsAdmin { get => (storeRepository?.CurrentUser?.Admin ?? false) == true ? Visibility.Visible : Visibility.Collapsed; }
+        /*public Visibility IsAdmin { get => Visibility.Visible; }*/
         public Visibility IsLogIn { get => storeRepository?.CurrentUser != null ? Visibility.Visible : Visibility.Collapsed; }
         public Visibility IsLogOut { get => IsLogIn == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed; }
         public Visibility IsPeriodBarUsed { get; set; }
@@ -289,7 +289,8 @@ namespace BookStore.ViewModels
         }
         private async Task CreateBookInRepository()
         {
-            throw new NotImplementedException();
+            if ((newViewFactory.CreateBookView(storeRepository.DbOptions)).Value)
+                await ManagedBooksAdmin();
         }
         private async Task CreateBookInStoreInRepository()
         {
@@ -323,7 +324,8 @@ namespace BookStore.ViewModels
         }
         private async Task EditBookInRepository(object book)
         {
-            throw new NotImplementedException();
+            if ((newViewFactory.CreateBookView(storeRepository.DbOptions, book as BookView)).Value)
+                await ManagedBooksAdmin();
         }
         private async Task EditBookInStoreInRepository(object bookInStore)
         {

@@ -595,16 +595,16 @@ namespace BookStore.Models
             using (StoreContext db = new StoreContext(options))
             {
                 resultManageBooksInStore = await (from bookInStore in db.BookInStores
-                                           join book in db.Books on bookInStore.BookId equals book.Id
-                                           select new BookInStoreView
-                                           {
-                                               Id = bookInStore.Id,
-                                               Book = book.Name,
-                                               CostPrice = bookInStore.CostPrice.ToString("#0.00"),
-                                               Price = bookInStore.Price.ToString("#0.00"),
-                                               Amount = bookInStore.Amount,
-                                               DateAdded=bookInStore.DateAdded
-                                           }).ToListAsync();
+                                                  join book in db.Books on bookInStore.BookId equals book.Id
+                                                  select new BookInStoreView
+                                                  {
+                                                      Id = bookInStore.Id,
+                                                      Book = book.Name,
+                                                      CostPrice = bookInStore.CostPrice.ToString("#0.00"),
+                                                      Price = bookInStore.Price.ToString("#0.00"),
+                                                      Amount = bookInStore.Amount,
+                                                      DateAdded = bookInStore.DateAdded.ToShortDateString()
+                                                  }).ToListAsync();
             }
             currentResultView = TypeResultView.ResultManageBooksInStoreView;
             ClearViews();

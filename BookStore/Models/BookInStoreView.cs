@@ -16,6 +16,6 @@ namespace BookStore.Models
         public string Price { get; set; }
         public int Amount { get; set; }
         [DisplayName("Date added")]
-        public DateTime DateAdded { get; set; }
+        public string DateAdded { get; set; }
     }
 }

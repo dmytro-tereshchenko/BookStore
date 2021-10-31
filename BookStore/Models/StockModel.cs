@@ -61,7 +61,7 @@ namespace BookStore.Models
                                           CostPrice = bookInStore.CostPrice.ToString("#0.00"),
                                           Price = bookInStore.Price.ToString("#0.00"),
                                           Amount = bookInStore.Amount,
-                                          DateAdded = bookInStore.DateAdded
+                                          DateAdded = bookInStore.DateAdded.ToShortDateString()
                                       }).ToListAsync();
                 await OnPropertyChanged(new PropertyChangedEventArgs(nameof(BookInStores)));
             }

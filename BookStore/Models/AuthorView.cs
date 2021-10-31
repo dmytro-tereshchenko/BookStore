@@ -16,5 +16,9 @@ namespace BookStore.Models
         public string? MiddleName { get; set; }
         [DisplayName("Last name")]
         public string LastName { get; set; }
+        public override string ToString()
+        {
+            return $"{FirstName} {(MiddleName is null ? "" : MiddleName + " ")}{LastName}";
+        }
     }
 }

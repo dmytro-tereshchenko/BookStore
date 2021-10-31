@@ -23,8 +23,12 @@ namespace BookStore.Infrastructure
 
         async void ICommand.Execute(object parameter)
         {
-            await ExecuteAsync();
-            await ExecuteAsync(parameter);
+            try
+            {
+                await ExecuteAsync();
+                await ExecuteAsync(parameter);
+            }
+            catch(Exception ex) { }
         }
     }
 }
