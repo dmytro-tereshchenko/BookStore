@@ -162,6 +162,9 @@ namespace BookStore.Models
         public async Task UserLogout()
         {
             currentUser = null;
+            currentResultView = TypeResultView.AllBooksView;
+            ClearViews();
+            await OnResultViewChanged(new PropertyChangedEventArgs(nameof(ResultBooksView)));
             await OnCurrentUserChanged(new PropertyChangedEventArgs(nameof(CurrentUser)));
         }
         public async Task PeriodChanged()
