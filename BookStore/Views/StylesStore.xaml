@@ -1,5 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:BookStore.Infrastructure">
+    <converters:CommandParametersConverter x:Key="CommandParametersConverter"/>
     <Image x:Key="IconLogout" Source="../Images/logout_1.png" Width="20" Height="20" />
     <Style x:Key="Icons" TargetType="{x:Type Image}">
         <Setter Property="Width" Value="20" />
@@ -63,7 +65,7 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Background" Value="Azure"/>
     </Style>
-    <Style x:Key="TextBlockEditable" BasedOn="{StaticResource TextBlockView}" TargetType="{x:Type TextBox}">
+    <Style x:Key="TextBlockEditable" BasedOn="{StaticResource TextBlockView}" TargetType="{x:Type Control}">
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Background" Value="Azure"/>
     </Style>

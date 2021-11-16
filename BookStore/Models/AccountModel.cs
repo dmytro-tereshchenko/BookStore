@@ -26,7 +26,7 @@ namespace BookStore.Models
 
         private async Task OnMessageChanged(EventArgs e) => await MessageChanged?.InvokeAsync(this, e);
 
-        public async Task AddAccount()
+        public async Task AddAccount(string password)
         {
             using (StoreContext db = new StoreContext(options))
             {
@@ -41,7 +41,7 @@ namespace BookStore.Models
                 {
                     Id = account.Id,
                     Login = account.Login,
-                    Password = account.Password,
+                    Password = password,
                     Admin=account.IsAdmin
                 });
                 await db.SaveChangesAsync();
@@ -49,7 +49,7 @@ namespace BookStore.Models
             Message = "Account created";
             await OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
         }
-        public async Task EditAccount()
+        public async Task EditAccount(string password)
         {
             using (StoreContext db = new StoreContext(options))
             {
@@ -68,7 +68,7 @@ namespace BookStore.Models
                     return;
                 }
                 dbAccount.Login = account.Login;
-                dbAccount.Password = account.Password;
+                dbAccount.Password = password == "" ? dbAccount.Password : password;
                 dbAccount.Admin = account.IsAdmin;
                 db.Entry<Account>(dbAccount).State = EntityState.Modified;
                 await db.SaveChangesAsync();

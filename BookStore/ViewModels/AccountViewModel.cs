@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace BookStore.ViewModels
@@ -25,17 +26,23 @@ namespace BookStore.ViewModels
         public ICommand Ok { get => ok; }
         public ICommand Cancel { get => cancel; }
         public AccountView Account { get => model.Account; }
-        private async Task CreateAccount(object window)
+        private async Task CreateAccount(object parameters)
         {
-            await model.AddAccount();
+            var par = parameters as object[];
+            var window = par[0] as Window;
+            var password = par[1] as PasswordBox;
+            await model.AddAccount(password.Password);
             if (window is Window)
             {
                 (window as Window).DialogResult = true;
             }
         }
-        private async Task EditAccount(object window)
+        private async Task EditAccount(object parameters)
         {
-            await model.EditAccount();
+            var par = parameters as object[];
+            var window = par[0] as Window;
+            var password = par[1] as PasswordBox;
+            await model.EditAccount(password.Password);
             if (window is Window)
             {
                 (window as Window).DialogResult = true;

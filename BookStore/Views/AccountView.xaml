@@ -12,7 +12,14 @@
         Style="{StaticResource Window}">
     <DockPanel LastChildFill="True">
         <UniformGrid DockPanel.Dock="Bottom" Columns="2">
-            <Button Command="{Binding Ok}" CommandParameter="{Binding ElementName=window}" Style="{StaticResource DialogButtons}">OK</Button>
+            <Button Command="{Binding Ok}" Style="{StaticResource DialogButtons}" Content="OK">
+                <Button.CommandParameter>
+                    <MultiBinding Converter="{StaticResource CommandParametersConverter }">
+                        <Binding ElementName="window"/>
+                        <Binding ElementName="password"/>
+                    </MultiBinding>
+                </Button.CommandParameter>
+            </Button>
             <Button Command="{Binding Cancel}" CommandParameter="{Binding ElementName=window}" Style="{StaticResource DialogButtons}">Cancel</Button>
         </UniformGrid>
         <Grid>
@@ -31,7 +38,7 @@
             <Label Grid.Row="1" Target="{Binding ElementName=login}" Style="{StaticResource LabelToTextBlockDialog}">Login</Label>
             <TextBox Grid.Row="1" Grid.Column="1" x:Name="login"  Text="{Binding Account.Login}" Style="{StaticResource TextBlockEditable}"/>
             <Label Grid.Row="2" Target="{Binding ElementName=password}" Style="{StaticResource LabelToTextBlockDialog}">Password</Label>
-            <TextBox Grid.Row="2" Grid.Column="1" x:Name="password"  Text="{Binding Account.Password}" Style="{StaticResource TextBlockEditable}"/>
+            <PasswordBox Grid.Row="2" Grid.Column="1" x:Name="password" Style="{StaticResource TextBlockEditable}"/>
             <Label Grid.Row="3" Target="{Binding ElementName=isAdmin}" Style="{StaticResource LabelToTextBlockDialog}">Is admin</Label>
             <CheckBox Grid.Row="3" Grid.Column="1" x:Name="isAdmin" IsChecked="{Binding Account.IsAdmin}" Style="{StaticResource CheckBoxDialog}"/>
         </Grid>
