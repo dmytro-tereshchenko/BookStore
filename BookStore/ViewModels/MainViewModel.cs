@@ -1,12 +1,10 @@
 ﻿using BookStore.Infrastructure;
 using BookStore.Interfaces;
-using BookStore.Models;
 using BookStore.Models.Db;
+using BookStore.Models.Presenters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -278,7 +276,8 @@ namespace BookStore.ViewModels
         }
         private async Task CreateAuthorInRepository()
         {
-            throw new NotImplementedException();
+            if ((newViewFactory.CreateAuthorView(storeRepository.DbOptions)).Value)
+                await ManagedAuthorsAdmin();
         }
         private async Task CreateGenreInRepository()
         {
@@ -313,7 +312,8 @@ namespace BookStore.ViewModels
         }
         private async Task EditAuthorInRepository(object author)
         {
-            throw new NotImplementedException();
+            if ((newViewFactory.CreateAuthorView(storeRepository.DbOptions, author as AuthorView)).Value)
+                await ManagedAuthorsAdmin();
         }
         private async Task EditGenreInRepository(object genre)
         {

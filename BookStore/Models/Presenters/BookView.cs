@@ -1,15 +1,8 @@
-﻿using BookStore.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
-namespace BookStore.Models
+namespace BookStore.Models.Presenters
 {
-    public class BookViewShow
+    public class BookView
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -20,6 +13,7 @@ namespace BookStore.Models
         public string Publisher { get; set; }
         public string Genre { get; set; }
         public string Series { get; set; }
-        public string Price { get; set; }
+        [DisplayName("Position in series")]
+        public string SeriesPosition { get; set; }
     }
 }
