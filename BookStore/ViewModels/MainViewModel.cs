@@ -305,7 +305,8 @@ namespace BookStore.ViewModels
         }
         private async Task CreateBookSeriesInRepository()
         {
-            throw new NotImplementedException();
+            if ((newViewFactory.CreateBookSeriesView(storeRepository.DbOptions)).Value)
+                await ManagedBookSeriesAdmin();
         }
         private async Task EditAccountInRepository(object account)
         {
@@ -343,7 +344,8 @@ namespace BookStore.ViewModels
         }
         private async Task EditBookSeriesInRepository(object bookSeries)
         {
-            throw new NotImplementedException();
+            if ((newViewFactory.CreateBookSeriesView(storeRepository.DbOptions, bookSeries as BookSeriesView)).Value)
+                await ManagedBookSeriesAdmin();
         }
         private async Task DeleteAccountInRepository(object account)
         {

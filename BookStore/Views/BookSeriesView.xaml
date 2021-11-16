@@ -1,0 +1,33 @@
+﻿<Window x:Class="BookStore.Views.BookSeriesView"
+        x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BookStore.Views"
+        mc:Ignorable="d"
+        x:Name="window"
+        Title="Book series" Height="200" Width="500"
+        MinHeight="200" MinWidth="300"
+        Style="{StaticResource Window}">
+    <DockPanel LastChildFill="True">
+        <UniformGrid DockPanel.Dock="Bottom" Columns="2">
+            <Button Command="{Binding Ok}" CommandParameter="{Binding ElementName=window}" Style="{StaticResource DialogButtons}">OK</Button>
+            <Button Command="{Binding Cancel}" CommandParameter="{Binding ElementName=window}" Style="{StaticResource DialogButtons}">Cancel</Button>
+        </UniformGrid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Target="{Binding ElementName=id}" Style="{StaticResource LabelToTextBlockDialog}">Id</Label>
+            <TextBox Grid.Column="1" x:Name="id" Text="{Binding BookSeries.Id, Mode=OneTime}" Style="{StaticResource TextBlockDialog}"/>
+            <Label Grid.Row="1" Target="{Binding ElementName=name}" Style="{StaticResource LabelToTextBlockDialog}">Name</Label>
+            <TextBox Grid.Row="1" Grid.Column="1" x:Name="name" Text="{Binding BookSeries.Name}" Style="{StaticResource TextBlockEditable}"/>
+        </Grid>
+    </DockPanel>
+</Window>
