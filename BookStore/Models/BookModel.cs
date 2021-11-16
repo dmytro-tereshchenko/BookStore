@@ -123,8 +123,11 @@ namespace BookStore.Models
         }
         public async Task AddAuthor(AuthorView author)
         {
-            resultAuthors = resultAuthors.Append(author);
-            await OnPropertyChanged(new PropertyChangedEventArgs(nameof(ResultAuthors)));
+            if (!resultAuthors.Contains(author))
+            {
+                resultAuthors = resultAuthors.Append(author);
+                await OnPropertyChanged(new PropertyChangedEventArgs(nameof(ResultAuthors)));
+            }
         }
         public async Task DeleteAuthor(AuthorView author)
         {

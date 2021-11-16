@@ -20,5 +20,9 @@ namespace BookStore.Models
         {
             return $"{FirstName} {(MiddleName is null ? "" : MiddleName + " ")}{LastName}";
         }
+        public override bool Equals(object obj)
+        {
+            return (obj as AuthorView).Id == this.Id;
+        }
     }
 }
