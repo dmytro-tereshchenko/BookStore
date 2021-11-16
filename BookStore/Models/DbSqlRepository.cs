@@ -1,12 +1,12 @@
 ﻿using BookStore.Infrastructure;
 using BookStore.Interfaces;
 using BookStore.Models.Db;
+using BookStore.Models.Presenters;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BookStore.Models

@@ -1,11 +1,6 @@
-﻿using BookStore.Models;
-using BookStore.Models.Db;
+﻿using BookStore.Models.Db;
+using BookStore.Models.Presenters;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookStore.Interfaces
 {
@@ -15,5 +10,6 @@ namespace BookStore.Interfaces
         bool? CreateAccountView(DbContextOptions<TContext> options, AccountView account = null);
         bool? CreateStockView(DbContextOptions<TContext> options, StockView stock = null);
         bool? CreateBookView(DbContextOptions<TContext> options, BookView book = null);
+        bool? CreateAuthorView(DbContextOptions<TContext> options, AuthorView author = null);
     }
 }
