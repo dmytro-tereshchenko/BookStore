@@ -69,5 +69,15 @@ namespace BookStore.ViewModels
             };
             return view.ShowDialog();
         }
+        public bool? CreatePublisherView(DbContextOptions<StoreContext> options, BookStore.Models.Presenters.PublisherView publisher = null)
+        {
+            PublisherModel model = new PublisherModel(options, publisher);
+            PublisherViewModel modelView = new PublisherViewModel(model, publisher is null ? false : true);
+            BookStore.Views.PublisherView view = new BookStore.Views.PublisherView()
+            {
+                DataContext = modelView
+            };
+            return view.ShowDialog();
+        }
     }
 }

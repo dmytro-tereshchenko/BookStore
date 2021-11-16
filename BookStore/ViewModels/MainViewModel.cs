@@ -286,7 +286,8 @@ namespace BookStore.ViewModels
         }
         private async Task CreatePublisherInRepository()
         {
-            throw new NotImplementedException();
+            if ((newViewFactory.CreatePublisherView(storeRepository.DbOptions)).Value)
+                await ManagedPublishersAdmin();
         }
         private async Task CreateBookInRepository()
         {
@@ -323,7 +324,8 @@ namespace BookStore.ViewModels
         }
         private async Task EditPublisherInRepository(object publisher)
         {
-            throw new NotImplementedException();
+            if ((newViewFactory.CreatePublisherView(storeRepository.DbOptions, publisher as PublisherView)).Value)
+                await ManagedPublishersAdmin();
         }
         private async Task EditBookInRepository(object book)
         {
