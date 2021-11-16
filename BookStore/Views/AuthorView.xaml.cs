@@ -5,7 +5,7 @@ namespace BookStore.Views
     /// <summary>
     /// Interaction logic for AuthorView.xaml
     /// </summary>
-    public partial class AuthorView : Window
+    internal partial class AuthorView : Window
     {
         public AuthorView()
         {
