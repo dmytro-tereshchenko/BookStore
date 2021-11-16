@@ -281,7 +281,8 @@ namespace BookStore.ViewModels
         }
         private async Task CreateGenreInRepository()
         {
-            throw new NotImplementedException();
+            if ((newViewFactory.CreateGenreView(storeRepository.DbOptions)).Value)
+                await ManagedGenresAdmin();
         }
         private async Task CreatePublisherInRepository()
         {
@@ -317,7 +318,8 @@ namespace BookStore.ViewModels
         }
         private async Task EditGenreInRepository(object genre)
         {
-            throw new NotImplementedException();
+            if ((newViewFactory.CreateGenreView(storeRepository.DbOptions, genre as GenreView)).Value)
+                await ManagedGenresAdmin();
         }
         private async Task EditPublisherInRepository(object publisher)
         {

@@ -59,5 +59,15 @@ namespace BookStore.ViewModels
             };
             return view.ShowDialog();
         }
+        public bool? CreateGenreView(DbContextOptions<StoreContext> options, BookStore.Models.Presenters.GenreView genre = null)
+        {
+            GenreModel model = new GenreModel(options, genre);
+            GenreViewModel modelView = new GenreViewModel(model, genre is null ? false : true);
+            BookStore.Views.GenreView view = new BookStore.Views.GenreView()
+            {
+                DataContext = modelView
+            };
+            return view.ShowDialog();
+        }
     }
 }
