@@ -72,8 +72,8 @@ namespace BookStore.ViewModels
             commands.Add("DeleteStock", new DialogCommand(DeleteStockInRepository));
             commands.Add("DeleteBookSeries", new DialogCommand(DeleteBookSeriesInRepository));
         }
-        /*public Visibility IsAdmin { get => (storeRepository?.CurrentUser?.Admin ?? false) == true ? Visibility.Visible : Visibility.Collapsed; }*/
-        public Visibility IsAdmin { get => Visibility.Visible; }
+        public Visibility IsAdmin { get => (storeRepository?.CurrentUser?.Admin ?? false) == true ? Visibility.Visible : Visibility.Collapsed; }
+        //public Visibility IsAdmin { get => Visibility.Visible; } //testing
         public Visibility IsLogIn { get => storeRepository?.CurrentUser != null ? Visibility.Visible : Visibility.Collapsed; }
         public Visibility IsLogOut { get => IsLogIn == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed; }
         public Visibility IsPeriodBarUsed { get; set; }

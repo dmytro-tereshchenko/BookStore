@@ -5,6 +5,8 @@ namespace BookStore.Models.Presenters
     public class StockView
     {
         public int Id { get; set; }
+        [DisplayName("Disabled")]
+        public int BookInStoreId { get; set; }
         [DisplayName("Book in store")]
         public string BookInStore { get; set; }
         public string Discount { get; set; }

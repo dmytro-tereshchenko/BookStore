@@ -31,7 +31,6 @@ namespace BookStore.ViewModels
         public ICommand Cancel { get => cancel; }
         public ICommand SearchBookInStore { get => searchBookInStore; }
         public ICommand SetBookInStore { get => setBookInStore; }
-        public StockView Account { get => model.Stock; }
         public string SearchBookName { get => model.SearchBookName; set => model.SearchBookName = value; }
         public IEnumerable<BookInStoreView> BookInStores { get => model.BookInStores; set => model.BookInStores = value; }
         public StockView Stock { get => model.Stock; set => model.Stock = value; }

@@ -18,11 +18,14 @@ namespace BookStore.Views
         private void dg_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
         {
             string displayName = GetPropertyDisplayName(e.PropertyDescriptor);
+            if (displayName == "Disabled")
+            {
+                e.Column.Visibility = Visibility.Hidden;
+            }
             if (!string.IsNullOrEmpty(displayName))
             {
                 e.Column.Header = displayName;
             }
-
         }
         public static string GetPropertyDisplayName(object descriptor)
         {

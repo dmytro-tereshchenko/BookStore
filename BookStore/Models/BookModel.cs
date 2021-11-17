@@ -68,7 +68,8 @@ namespace BookStore.Models
             using (StoreContext db = new StoreContext(options))
             {
                 searchAuthors = await (from author in db.Authors
-                                       where searchAuthorName == null || EF.Functions.Like(author.FullName, $"%{searchAuthorName}%")
+                                       where searchAuthorName == null || 
+                                       EF.Functions.Like(author.FirstName + " " + (author.MiddleName == null ? "" : author.MiddleName + " ") + author.LastName, $"%{searchAuthorName}%")
                                        select new AuthorView
                                        {
                                            Id = author.Id,
@@ -138,16 +139,19 @@ namespace BookStore.Models
         }
         public async Task SetSeries(BookSeriesView series)
         {
+            book.SeriesId = series.Id;
             book.Series = series.Name;
             await OnPropertyChanged(new PropertyChangedEventArgs(nameof(Book)));
         }
         public async Task SetGenre(GenreView genre)
         {
+            book.GenreId = genre.Id;
             book.Genre = genre.Name;
             await OnPropertyChanged(new PropertyChangedEventArgs(nameof(Book)));
         }
         public async Task SetPublisher(PublisherView publisher)
         {
+            book.PublisherId = publisher.Id;
             book.Publisher = publisher.Name;
             await OnPropertyChanged(new PropertyChangedEventArgs(nameof(Book)));
         }
@@ -161,10 +165,10 @@ namespace BookStore.Models
                 {
                     Book newBook = new Book()
                     {
-                        Genre = db.Genres.Where(g => g.Name == book.Genre).FirstOrDefault(),
+                        GenreId = book.GenreId,
                         Name = book.Name,
                         Pages = book.Pages,
-                        Publisher = db.Publishers.Where(p => p.Name == book.Publisher).FirstOrDefault(),
+                        PublisherId = book.PublisherId,
                         YearOfPublished = book.YearOfPublished
                     };
                     await db.Books.AddAsync(newBook);
@@ -179,7 +183,7 @@ namespace BookStore.Models
                         {
                             Book = newBook,
                             Position = position,
-                            BookSeries = db.BookSerieses.Where(bs => bs.Name == book.Series).FirstOrDefault()
+                            BookSeriesId = book.SeriesId
                         });
                     }
                     await db.SaveChangesAsync();
@@ -206,10 +210,10 @@ namespace BookStore.Models
                         await OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
                         return;
                     }
-                    dbBook.Genre = db.Genres.Where(g => g.Name == book.Genre).FirstOrDefault();
+                    dbBook.GenreId = book.GenreId;
                     dbBook.Name = book.Name;
                     dbBook.Pages = book.Pages;
-                    dbBook.Publisher = db.Publishers.Where(p => p.Name == book.Publisher).FirstOrDefault();
+                    dbBook.PublisherId = book.PublisherId;
                     dbBook.YearOfPublished = book.YearOfPublished;
                     db.Entry<Book>(dbBook).State = EntityState.Modified;
 
@@ -227,7 +231,7 @@ namespace BookStore.Models
                         {
                             BookId = book.Id,
                             Position = int.Parse(book.SeriesPosition),
-                            BookSeries = db.BookSerieses.Where(bs => bs.Name == book.Series).FirstOrDefault()
+                            BookSeriesId = book.SeriesId
                         });
                     }
                     await db.SaveChangesAsync();

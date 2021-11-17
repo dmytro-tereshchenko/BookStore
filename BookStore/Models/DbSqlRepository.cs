@@ -583,8 +583,11 @@ namespace BookStore.Models
                                                             }).Where(c => c.BookId == book.Id).Select(d => d.AuthorName)),
                                                Pages = book.Pages,
                                                YearOfPublished = book.YearOfPublished,
+                                               PublisherId = publisher.Id,
                                                Publisher = publisher.Name,
+                                               GenreId = genre.Id,
                                                Genre = genre.Name,
+                                               SeriesId = (subBsb == null || subBs == null ? 0 : subBs.Id),
                                                Series = (subBsb == null || subBs == null ? "" : subBs.Name),
                                                SeriesPosition = (subBsb == null || subBs == null||subBsb.Position == null ? "" : subBsb.Position.ToString())
                                            }).ToListAsync();
@@ -624,6 +627,7 @@ namespace BookStore.Models
                                             select new StockView
                                             {
                                                 Id = stock.Id,
+                                                BookInStoreId = bookInStore.Id,
                                                 BookInStore = book.Name,
                                                 Discount = stock.Discount.ToString("#0.00"),
                                                 DateStart = stock.DateStart.ToShortDateString(),

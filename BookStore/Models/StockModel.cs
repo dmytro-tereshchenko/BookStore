@@ -69,6 +69,7 @@ namespace BookStore.Models
         public async Task SetBookInStore(BookInStoreView bookInStore)
         {
             stock.BookInStore = bookInStore.Book;
+            stock.BookInStoreId = bookInStore.Id;
             await OnPropertyChanged(new PropertyChangedEventArgs(nameof(Stock)));
         }
         public async Task AddStock()
@@ -93,10 +94,7 @@ namespace BookStore.Models
                     db.Stocks.Add(new Stock()
                     {
                         Id = stock.Id,
-                        BookInStoreId = (from bookInStore in db.BookInStores
-                                         join book in db.Books on bookInStore.BookId equals book.Id
-                                         where book.Name == Stock.BookInStore
-                                         select bookInStore.Id).FirstOrDefault(),
+                        BookInStoreId = stock.BookInStoreId,
                         Discount = discount,
                         DateStart = startDate,
                         DateEnd = endDate
@@ -125,10 +123,7 @@ namespace BookStore.Models
                         await OnMessageChanged(new PropertyChangedEventArgs(nameof(Message)));
                         return;
                     }
-                    dbStock.BookInStoreId = (from bookInStore in db.BookInStores
-                                             join book in db.Books on bookInStore.BookId equals book.Id
-                                             where book.Name == Stock.BookInStore
-                                             select bookInStore.Id).FirstOrDefault();
+                    dbStock.BookInStoreId = stock.BookInStoreId;
                     dbStock.Discount = discount;
                     dbStock.DateStart = startDate;
                     dbStock.DateEnd = endDate;
