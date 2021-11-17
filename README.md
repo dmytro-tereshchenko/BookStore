@@ -1,7 +1,7 @@
 # BookStore
 Desktop application for keeping track of the current assortment of books in the store.
 
-Technologies: C#, .NET 5, WPF, EF Core (MS SQL Server), Migrations, Asynchronous programming.
+Technologies: C#, .NET 5, WPF, MVVM, EF Core (MS SQL Server), Migrations, Asynchronous programming.
 
 ---
 
