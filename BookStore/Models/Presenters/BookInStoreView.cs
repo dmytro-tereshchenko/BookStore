@@ -5,6 +5,8 @@ namespace BookStore.Models.Presenters
     public class BookInStoreView
     {
         public int Id { get; set; }
+        [DisplayName("Disabled")]
+        public int BookId { get; set; }
         public string Book { get; set; }
         [DisplayName("Cost price")]
         public string CostPrice { get; set; }

@@ -69,6 +69,11 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Background" Value="Azure"/>
     </Style>
+    <Style x:Key="NumericUpDownEditable" BasedOn="{StaticResource TextBlockView}" TargetType="{x:Type Control}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Background" Value="Azure"/>
+        <Setter Property="Padding" Value="0"/>
+    </Style>
     <Style x:Key="TextBoxDialog" BasedOn="{StaticResource TextBlockView}" TargetType="{x:Type TextBox}">
         <Setter Property="Background" Value="Azure"/>
     </Style>

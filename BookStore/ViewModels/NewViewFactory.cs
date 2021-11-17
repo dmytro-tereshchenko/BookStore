@@ -89,5 +89,15 @@ namespace BookStore.ViewModels
             };
             return view.ShowDialog();
         }
+        public bool? CreateBookInStoreView(DbContextOptions<StoreContext> options, BookStore.Models.Presenters.BookInStoreView bookInStore = null)
+        {
+            BookInStoreModel model = new BookInStoreModel(options, bookInStore);
+            BookInStoreViewModel modelView = new BookInStoreViewModel(model, bookInStore is null ? false : true);
+            BookStore.Views.BookInStoreView view = new BookStore.Views.BookInStoreView()
+            {
+                DataContext = modelView
+            };
+            return view.ShowDialog();
+        }
     }
 }

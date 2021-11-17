@@ -14,5 +14,6 @@ namespace BookStore.Interfaces
         bool? CreateGenreView(DbContextOptions<TContext> options, GenreView genre = null);
         bool? CreatePublisherView(DbContextOptions<TContext> options, PublisherView publisher = null);
         bool? CreateBookSeriesView(DbContextOptions<TContext> options, BookSeriesView bookSeries = null);
+        bool? CreateBookInStoreView(DbContextOptions<TContext> options, BookInStoreView bookInStore = null);
     }
 }

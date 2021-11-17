@@ -1,5 +1,4 @@
-﻿using BookStore.Interfaces;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows;
@@ -8,19 +7,18 @@ using System.Windows.Controls;
 namespace BookStore.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for BookInStoreView.xaml
     /// </summary>
-    internal partial class MainView : Window
+    internal partial class BookInStoreView : Window
     {
-        public MainView(IViewModel viewModel)
+        public BookInStoreView()
         {
             InitializeComponent();
-            this.DataContext = viewModel;
         }
         private void dg_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
         {
             string displayName = GetPropertyDisplayName(e.PropertyDescriptor);
-            if(displayName == "Disabled")
+            if (displayName == "Disabled")
             {
                 e.Column.Visibility = Visibility.Hidden;
             }
@@ -28,7 +26,6 @@ namespace BookStore.Views
             {
                 e.Column.Header = displayName;
             }
-
         }
         public static string GetPropertyDisplayName(object descriptor)
         {
@@ -61,5 +58,4 @@ namespace BookStore.Views
             return null;
         }
     }
-    
 }

@@ -602,6 +602,7 @@ namespace BookStore.Models
                                                   select new BookInStoreView
                                                   {
                                                       Id = bookInStore.Id,
+                                                      BookId = book.Id,
                                                       Book = book.Name,
                                                       CostPrice = bookInStore.CostPrice.ToString("#0.00"),
                                                       Price = bookInStore.Price.ToString("#0.00"),
