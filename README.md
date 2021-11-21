@@ -30,6 +30,11 @@ This application allows:
     - edit entities in db
     - delete entities from db
 
+## Beginning of work
+1. Change connection string to db in [appsettings.json](/BookStore/appsettings.json)
+2. Change administrator user details in method `OnModelCreating` in [StoreContext.cs](/BookStore/Models/Db/StoreContext.cs):
+3. Run application
+
 ---
 
 ## Application example
